@@ -7,8 +7,9 @@ using UnityEditor;
 
 [ExecuteInEditMode]
 public class CustomerPath : MonoBehaviour {
-    [SerializeField]
-    public Vector3[] points { get; private set; }
+    [SerializeField, HideInInspector]
+    private PathPoint[] _path;
+    public PathPoint[] path { get { return _path; } }
 
 #if UNITY_EDITOR
     [SerializeField]
@@ -20,11 +21,7 @@ public class CustomerPath : MonoBehaviour {
 #if UNITY_EDITOR
         if (!Application.isPlaying)
         {
-            points = new Vector3[transform.childCount];
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                points[i] = transform.GetChild(i).position;
-            }
+            _path = GetComponentsInChildren<PathPoint>();
             BroadcastMessage("Show", show);
         }
 #endif
@@ -34,9 +31,9 @@ public class CustomerPath : MonoBehaviour {
     void OnDrawGizmos()
     {
         if (!show) return;
-        for (int i = 0; i < points.Length; i++)
+        for (int i = 0; i < _path.Length; i++)
         {
-            if (i > 0) Gizmos.DrawLine(points[i - 1], points[i]);
+            if (i > 0) Gizmos.DrawLine(_path[i - 1].transform.position, _path[i].transform.position);
         }
     }
 #endif

@@ -20,6 +20,10 @@ public class Gallery : MonoBehaviour {
             return i;
         }
     }
+
+    public Customer tmp;
+
+    private PathPoint[] galleryPath;
 	// Use this for initialization
 	void Start () {
         paintings = GetComponentsInChildren<Painting>();
@@ -27,7 +31,12 @@ public class Gallery : MonoBehaviour {
         {
             p.gameObject.SetActive(false);
         }
+        galleryPath = GetComponentInChildren<CustomerPath>().path;
+        Debug.Log(galleryPath);
+        tmp.BeginTraversingPath(galleryPath);
 	}
+
+    
 
     /// <summary>
     /// Adds a new painting on the wall, will throw an error if no slots
