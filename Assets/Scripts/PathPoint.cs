@@ -3,6 +3,6 @@ using System.Collections;
 
 public class PathPoint : MonoBehaviour {
     public Painting targetPainting;
-    public bool pointToLookAtPaintingFrom { get { return targetPainting != null; } }
+    public bool canLookAtPainting { get { return targetPainting != null && targetPainting.visible; } }
     public Vector3 point { get { return transform.position; } }
 }
