@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Getting all the time delta errors...wat
         finiteStateMachine.Update(1.0f / 60.0f);
     }
 
