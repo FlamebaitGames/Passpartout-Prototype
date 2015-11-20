@@ -10,24 +10,37 @@ public class GameController : MonoBehaviour
     #endregion
 
     FSM finiteStateMachine = new FSM();
-
+    
     // Use this for initialization
     void Start()
     {
         State.Controller = this;
         finiteStateMachine.Push(new HUBState());
+        Gallery g = FindObjectOfType<Gallery>();
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        StartCoroutine(TMP_CustomerSpawner());
+
     }
 
     // Update is called once per frame
     void Update()
     {
         // Getting all the time delta errors...wat
-        finiteStateMachine.Update(1.0f / 60.0f);
+        finiteStateMachine.Update(1.0f / 60.0f); // delta is seldom 1/60 here, only FixedUpdate does that
     }
 
     public void TickTime(float dt)
     {
         currentTimeOfTheDay += dt;
         if (currentTimeOfTheDay >= dayInSeconds) currentTimeOfTheDay -= currentTimeOfTheDay;
+    }
+
+    private IEnumerator TMP_CustomerSpawner()
+    {
+        while (true)
+        {
+            BroadcastMessage("AddCustomer");
+            yield return new WaitForSeconds(3.0f);
+        }
     }
 }
