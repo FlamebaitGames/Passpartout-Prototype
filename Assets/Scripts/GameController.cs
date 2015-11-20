@@ -16,7 +16,10 @@ public class GameController : MonoBehaviour
     {
         State.Controller = this;
         finiteStateMachine.Push(new HUBState());
-        FindObjectOfType<Gallery>().AddNewPainting(Painting.CreateSampleTexture2D());
+        Gallery g = FindObjectOfType<Gallery>();
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        StartCoroutine(TMP_CustomerSpawner());
+
     }
 
     // Update is called once per frame
@@ -30,5 +33,14 @@ public class GameController : MonoBehaviour
     {
         currentTimeOfTheDay += dt;
         if (currentTimeOfTheDay >= dayInSeconds) currentTimeOfTheDay -= currentTimeOfTheDay;
+    }
+
+    private IEnumerator TMP_CustomerSpawner()
+    {
+        while (true)
+        {
+            BroadcastMessage("AddCustomer");
+            yield return new WaitForSeconds(3.0f);
+        }
     }
 }

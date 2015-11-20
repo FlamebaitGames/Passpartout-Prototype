@@ -21,7 +21,7 @@ public class Gallery : MonoBehaviour {
         }
     }
 
-    public Customer tmp;
+    public Customer customerPrefab;
 
     private PathPoint[] galleryPath;
 	// Use this for initialization
@@ -32,8 +32,6 @@ public class Gallery : MonoBehaviour {
             p.gameObject.SetActive(false);
         }
         galleryPath = GetComponentInChildren<CustomerPath>().path;
-        Debug.Log(galleryPath);
-        tmp.BeginTraversingPath(galleryPath);
 	}
 
     
@@ -63,5 +61,22 @@ public class Gallery : MonoBehaviour {
         }
         return null;
         
+    }
+
+    //
+    //      EVENTS BELOW
+    //
+
+    private void AddCustomer()
+    {
+        Customer c = Instantiate<Customer>(customerPrefab); // may be replaced by permanent stash
+        c.transform.parent = transform;
+        c.transform.position = galleryPath[0].point;
+        c.BeginTraversingPath(galleryPath);
+    }
+
+    private void OnCustomerExit(Customer customer)
+    {
+        Destroy(customer.gameObject);
     }
 }
