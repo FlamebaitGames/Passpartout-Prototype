@@ -36,7 +36,7 @@ public class Gallery : MonoBehaviour {
     /// <param name="canvas"></param>
     public Painting AddNewPainting(Texture canvas)
     {
-        if (slotsLeft > 0)
+        if (!(slotsLeft > 0))
         {
             Debug.LogError("No slots left to put paintings on!");
             Debug.Break();
