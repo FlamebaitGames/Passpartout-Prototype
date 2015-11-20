@@ -2,16 +2,36 @@
 using System.Collections;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class Painting : MonoBehaviour {
+    
+    public string title = "DefaultTitle";
+    public int price = 0;
+    /// <summary>
+    /// Clears all values of this painting, returning it to a blank slate.
+    /// </summary>
+    public void Clear()
+    {
+        title = "DefaultTitle";
+        price = 0;
+    }
+    /// <summary>
+    /// Removes the painting from the wall by hiding it.
+    /// </summary>
+    public void Remove()
+    {
+        Clear();
+        gameObject.SetActive(false);
+    }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
+    /// <summary>
+    /// Clears this painting and assigns a new texture to the canvas,
+    /// effectively replacing the previous painting.
+    /// </summary>
+    /// <param name="canvas"></param>
+    public void OverwriteNew(Texture canvas)
+    {
+        Clear();
+        GetComponent<Renderer>().materials[0].mainTexture = canvas;
+    }
 
     /// <summary>
     /// Example method for creating a read/write texture
@@ -32,18 +52,14 @@ public class Painting : MonoBehaviour {
         return tx;
     }
 
-    /// <summary>
-    /// Creates a new painting GameObject
-    /// </summary>
-    /// <param name="canvas"></param>
-    /// <param name="gameObjectName"></param>
-    /// <returns></returns>
-    public static Painting Create(Texture canvas, string gameObjectName = "Painting")
+
+    //
+    //      EVENTS DEFINED BELOW
+    //
+    
+    // User has clicked on this painting
+    private void OnSelected()
     {
-        Painting p = Instantiate<Painting>(Resources.Load<Painting>("Painting"));
-        GameObject parent = GameObject.Find("Paintings");
-        p.GetComponent<Renderer>().material.mainTexture = canvas;
-        if (parent != null) p.transform.parent = parent.transform;
-        return p;
+
     }
 }
