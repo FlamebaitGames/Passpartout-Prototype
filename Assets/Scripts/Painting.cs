@@ -5,6 +5,7 @@ public class Painting : MonoBehaviour {
     
     public string title = "DefaultTitle";
     public int price = 0;
+    public bool visible { get { return gameObject.activeSelf; } }
     /// <summary>
     /// Clears all values of this painting, returning it to a blank slate.
     /// </summary>
