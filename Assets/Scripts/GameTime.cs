@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Time {
+public class GameTime {
     private float dayInSeconds      = 120.0f;
     private float currentTime       = 0.0f;
     private float secondsPerHour    = 5.0f;
@@ -9,8 +9,8 @@ public class Time {
     private int d;
     private int m;
     private int y;
-    
-    public Time(float dayInSeconds, int day, int month, int year)
+
+    public GameTime(float dayInSeconds, int day, int month, int year)
     {
         this.dayInSeconds = dayInSeconds;
         d = day;
