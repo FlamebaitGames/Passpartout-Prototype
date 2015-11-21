@@ -6,17 +6,29 @@ using System.Collections.Generic;
 using UnityEditor;
 using System;
 using System.Reflection;
+
+
 /// <summary>
 /// Should this field be visible in the GameTweaker window
 /// </summary>
-[System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+[System.AttributeUsage(System.AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
 sealed class ShowInTweaker : System.Attribute
 {
+    readonly bool sharedAmongAllInstances;
+    public ShowInTweaker (bool sharedAmongAllInstances = false) 
+    {
+        this.sharedAmongAllInstances = sharedAmongAllInstances;
+    }
 
-   public ShowInTweaker () 
-   { 
+    public bool isSharedAmongAllInstances { get { return sharedAmongAllInstances; } }
+}
 
-   }
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+sealed class UsedInTweaker : Attribute
+{
+    public UsedInTweaker()
+    {
+    }
 }
 
 public class GameTweaker : EditorWindow {
@@ -25,26 +37,41 @@ public class GameTweaker : EditorWindow {
     [SerializeField]
     private bool open = false;
     private List<Type> editableTypes = new List<Type>();
-    private List<UnityEngine.Object> modifyableObjects;
+    private List<List<UnityEngine.Object>> modifyables = new List<List<UnityEngine.Object>>();
 
+    private bool hasFocus = false;
+    private int refreshTick = 0;
     // Add menu named "My Window" to the Window menu
     [MenuItem("Window/Game Settings")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
         GameTweaker window = (GameTweaker)EditorWindow.GetWindow(typeof(GameTweaker));
+        window.RefreshContent();
         window.Show();
     }
 
     private void RefreshContent()
     {
-        modifyableObjects = new List<UnityEngine.Object>();
-        foreach (string t in editableTypeNames)
+        editableTypes = new List<Type>();
+        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
-            Type type = Type.GetType(t);
+            foreach (Type type in assembly.GetTypes())
+            {
+                if(type.GetCustomAttributes(typeof(UsedInTweaker), true).Length > 0)
+                {
+                    editableTypes.Add(type);
+                }
+            }
+        }
+        modifyables = new List<List<UnityEngine.Object>>();
+        foreach (Type type in editableTypes)
+        {
             if (type != null)
             {
-                modifyableObjects.AddRange(FindObjectsOfType(type));
+                UnityEngine.Object[] objs = FindObjectsOfType(type);
+                if(objs.Length > 0)
+                    modifyables.Add(new List<UnityEngine.Object>(objs));
             }
             
         }
@@ -52,38 +79,81 @@ public class GameTweaker : EditorWindow {
 
     void OnGUI()
     {
-        
-        GUILayout.Label("Base Settings", EditorStyles.boldLabel);
-        EditorGUILayout.BeginVertical();
-        foreach (UnityEngine.Object obj in modifyableObjects)
+        try
         {
-            DisplayObject(obj);
+            GUIStyle s = new GUIStyle();
+            s.fontSize = 14;
+            s.fontStyle = FontStyle.Bold;
+            
+            //s.alignment = TextAnchor.UpperCenter;
+            EditorGUILayout.LabelField("Shared Settings", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical();
+            EditorGUI.indentLevel++;
+            foreach (List<UnityEngine.Object> obj in modifyables)
+                DisplayClass(obj);
+            EditorGUI.indentLevel--;
+            EditorGUILayout.Separator();
+            EditorGUILayout.LabelField("Instanced Settings", EditorStyles.boldLabel);
+            EditorGUI.indentLevel++;
+            foreach (List<UnityEngine.Object> list in modifyables)
+                foreach (UnityEngine.Object obj in list)
+                    DisplayObject(obj);
+            EditorGUI.indentLevel--;
+            EditorGUILayout.EndVertical();
         }
-        EditorGUILayout.Separator();
-        EditorGUILayout.Separator();
-        EditorGUILayout.Separator();
-        EditorGUILayout.Separator();
-        EditorGUILayout.Separator();
-        EditorGUILayout.LabelField("Under da hood");
-        SerializedObject self = new SerializedObject(this);
-        SerializedProperty p = self.FindProperty("editableTypeNames");
-
-        open = EditorGUILayout.Foldout(open, p.name);
-        Debug.Log(open);
-        if (open)
+        catch (UnityException e)
         {
-            int nSize = EditorGUILayout.IntField("Size", p.arraySize);
-            for (int i = 0; i < p.arraySize; i++)
+            RefreshContent();
+        }
+        
+    }
+
+    void OnFocus()
+    {
+        RefreshContent();
+    }
+    void OnLostFocus()
+    {
+        RefreshContent();
+    }
+    void OnHeirarchyChange()
+    {
+        RefreshContent();
+    }
+
+    private void DisplayClass(List<UnityEngine.Object> objRef)
+    {
+        SerializedObject o = new SerializedObject(objRef[0]);
+        Type type = objRef[0].GetType();
+        FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+        EditorGUILayout.LabelField(type.ToString(), EditorStyles.boldLabel);
+        EditorGUI.indentLevel++;
+        foreach (FieldInfo field in fields)
+        {
+            bool hasShowinTweakerAttribute = false;
+            foreach (Attribute at in field.GetCustomAttributes(true))
             {
-                EditorGUILayout.PropertyField(p.GetArrayElementAtIndex(i));
+                if (at is ShowInTweaker)
+                {
+                    Debug.Log(((ShowInTweaker)at).isSharedAmongAllInstances);
+                    hasShowinTweakerAttribute = ((ShowInTweaker)at).isSharedAmongAllInstances;
+                }
             }
-            p.arraySize = nSize;
+            if (hasShowinTweakerAttribute)
+            {
+                var prop = o.FindProperty(field.Name);
+                EditorGUILayout.PropertyField(prop);
+                for (int i = 1; i < objRef.Count; i++)
+                {
+                    SerializedObject o2 = new SerializedObject(objRef[i]);
+                    o2.CopyFromSerializedProperty(prop);
+                    o2.ApplyModifiedPropertiesWithoutUndo();
+                }
+                o.ApplyModifiedProperties();
+            }
         }
+        EditorGUI.indentLevel--;
 
-        
-        self.ApplyModifiedProperties();
-        if (GUILayout.Button("Refresh")) RefreshContent();
-        EditorGUILayout.EndVertical();
     }
 
     private void DisplayObject(UnityEngine.Object obj)
@@ -91,12 +161,14 @@ public class GameTweaker : EditorWindow {
         Type type = obj.GetType();
         FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy);
         SerializedObject o = new SerializedObject(obj);
+        EditorGUILayout.LabelField(obj.name + " (" + type.ToString() + ")", EditorStyles.boldLabel);
+        EditorGUI.indentLevel++;
         foreach (FieldInfo field in fields)
         {
             bool hasShowinTweakerAttribute = false;
             foreach (Attribute at in field.GetCustomAttributes(true))
             {
-                if (at is ShowInTweaker)
+                if (at is ShowInTweaker && !((ShowInTweaker)at).isSharedAmongAllInstances)
                 {
                     hasShowinTweakerAttribute = true;
                 }
@@ -107,6 +179,7 @@ public class GameTweaker : EditorWindow {
             }
         }
         o.ApplyModifiedProperties();
+        EditorGUI.indentLevel--;
     }
     
 }

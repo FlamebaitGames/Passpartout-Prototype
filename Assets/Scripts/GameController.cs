@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[UsedInTweaker]
 public class GameController : MonoBehaviour
 {
     #region Time System
@@ -10,7 +11,6 @@ public class GameController : MonoBehaviour
     [HideInInspector]
     public float currentTimeOfTheDay = 0.0f;
     #endregion
-
     FSM finiteStateMachine = new FSM();
     
     // Use this for initialization
