@@ -34,6 +34,12 @@ public class Gallery : MonoBehaviour {
         galleryPath = GetComponentInChildren<CustomerPath>().path;
 	}
 
+    private void PurchasePainting(Painting painting)
+    {
+        // TODO - add money to player & modify fame
+        painting.Remove();
+    }
+
     
 
     /// <summary>

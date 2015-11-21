@@ -11,6 +11,11 @@ public class HUBState : State {
         // base.Update(dt); Don't tick time when in HUB State.
     }
 
+    public override void Enter()
+    {
+        menuPanels.SetPanelsToShow(MenuPanels.Panel.MAIN_MENU_PANEL);
+    }
+
     public override string ToString()
     {
         return "HUB State";

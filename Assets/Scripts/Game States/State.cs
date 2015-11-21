@@ -4,13 +4,16 @@ using System.Collections;
 // This is not a abstract-class, reason  is I want logic to be run in the base-class.
 public class State {
     public static GameController Controller { get; set; }
+    public static MenuPanels menuPanels { get; set; }
     public bool Finished { get; set; }
-    public void Enter()
-    {
 
+    
+    public virtual void Enter()
+    {
+        menuPanels.SetPanelsToShow(MenuPanels.Panel.NONE);
     }
 
-    public void Exit()
+    public virtual void Exit()
     {
 
     }

@@ -15,10 +15,13 @@ public class GameController : MonoBehaviour
     void Start()
     {
         State.Controller = this;
+        State.menuPanels = GetComponentInChildren<MenuPanels>();
+        Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
         finiteStateMachine.Push(new HUBState());
         Gallery g = FindObjectOfType<Gallery>();
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        
         StartCoroutine(TMP_CustomerSpawner());
+        StartCoroutine(TMP_AddPainting(g));
 
     }
 
@@ -40,7 +43,25 @@ public class GameController : MonoBehaviour
         while (true)
         {
             BroadcastMessage("AddCustomer");
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(18.0f);
         }
+    }
+
+    private IEnumerator TMP_AddPainting(Gallery g)
+    {
+        while (true)
+        {
+            g.AddNewPainting(Painting.CreateSampleTexture2D());
+            yield return new WaitForSeconds(5.0f);
+        }
+    }
+
+
+    //
+    //      EVENTS BELOW
+    //
+    private void StartGame()
+    {
+        finiteStateMachine.Push(new PlayState());
     }
 }
