@@ -32,6 +32,16 @@ public class FSM {
 
     public State Pop()
     {
-        return (states.Count != 0) ? states.Pop() : null;
+        if (states.Count > 0)
+        {
+            states.Peek().Exit();
+            State s = states.Pop();
+            states.Peek().Enter();
+            return s;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
