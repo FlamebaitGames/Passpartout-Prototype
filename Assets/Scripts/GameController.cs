@@ -5,7 +5,9 @@ public class GameController : MonoBehaviour
 {
     #region Time System
     [Range(1.0f, 1200.0f)]
+    [ShowInTweaker]
     public float dayInSeconds = 120.0f; // Default: 10 Minutes
+    [HideInInspector]
     public float currentTimeOfTheDay = 0.0f;
     #endregion
 
@@ -20,22 +22,21 @@ public class GameController : MonoBehaviour
         finiteStateMachine.Push(new HUBState());
         Gallery g = FindObjectOfType<Gallery>();
         
-        StartCoroutine(TMP_CustomerSpawner());
-        StartCoroutine(TMP_AddPainting(g));
+        //StartCoroutine(TMP_CustomerSpawner());
+        //StartCoroutine(TMP_AddPainting(g));
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Getting all the time delta errors...wat
-        finiteStateMachine.Update(1.0f / 60.0f); // delta is seldom 1/60 here, only FixedUpdate does that
+        finiteStateMachine.Update(Time.deltaTime);
     }
 
     public void TickTime(float dt)
     {
         currentTimeOfTheDay += dt;
-        if (currentTimeOfTheDay >= dayInSeconds) currentTimeOfTheDay -= currentTimeOfTheDay;
+        if (currentTimeOfTheDay >= dayInSeconds) EndDay();
     }
 
     private IEnumerator TMP_CustomerSpawner()
@@ -63,5 +64,16 @@ public class GameController : MonoBehaviour
     private void StartGame()
     {
         finiteStateMachine.Push(new PlayState());
+    }
+
+    private void StartDay()
+    {
+        finiteStateMachine.Pop();
+        currentTimeOfTheDay = 0.0f;
+    }
+
+    private void EndDay()
+    {
+        finiteStateMachine.Push(new EndDayState());
     }
 }

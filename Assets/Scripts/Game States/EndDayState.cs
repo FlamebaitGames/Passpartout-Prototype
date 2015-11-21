@@ -8,6 +8,11 @@ public class EndDayState : State {
         menuPanels.SetPanelsToShow(MenuPanels.Panel.WEEKLY_PANEL | MenuPanels.Panel.MONEY_PANEL);
     }
 
+    public override void Update(float dt)
+    {
+        
+    }
+
     public override string ToString()
     {
         return "End Day State";
