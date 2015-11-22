@@ -21,6 +21,7 @@ public class Painting : MonoBehaviour {
     public void Remove()
     {
         Clear();
+        OnDeselected();
         gameObject.SetActive(false);
     }
 
