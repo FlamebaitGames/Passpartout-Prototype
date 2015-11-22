@@ -5,6 +5,7 @@ public class Gallery : MonoBehaviour {
 
 
     public Painting[] paintings { get; private set; }
+    public Customer[] customers { get; private set; }
     /// <summary>
     /// How many slots are left to put paintings on
     /// </summary>
@@ -27,9 +28,14 @@ public class Gallery : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         paintings = GetComponentsInChildren<Painting>();
+        customers = GetComponentsInChildren<Customer>();
         foreach (Painting p in paintings)
         {
             p.gameObject.SetActive(false);
+        }
+        foreach (Customer c in customers)
+        {
+            c.gameObject.SetActive(false);
         }
         galleryPath = GetComponentInChildren<CustomerPath>().path;
 	}
@@ -75,14 +81,25 @@ public class Gallery : MonoBehaviour {
 
     private void AddCustomer()
     {
-        Customer c = Instantiate<Customer>(customerPrefab); // may be replaced by permanent stash
-        c.transform.parent = transform;
+        //Customer c = Instantiate<Customer>(customerPrefab); // may be replaced by permanent stash
+        Customer c = null;
+        foreach (Customer cust in customers)
+        {
+            if (!cust.gameObject.activeSelf) c = cust;
+            if (c != null) break;
+        }
+        if (c == null)
+        {
+            Debug.LogError("Ran out of customers!");
+            Debug.Break();
+        }
+        c.gameObject.SetActive(true);
         c.transform.position = galleryPath[0].point;
         c.BeginTraversingPath(galleryPath);
     }
 
     private void OnCustomerExit(Customer customer)
     {
-        Destroy(customer.gameObject);
+        customer.gameObject.SetActive(false);
     }
 }

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[UsedInTweaker]
+[TweakableClass]
 public class GameController : MonoBehaviour
 {
     #region Time System
     [Range(1.0f, 1200.0f)]
-    [ShowInTweaker]
+    [TweakableField]
     public float dayInSeconds = 120.0f; // Default: 10 Minutes
     [HideInInspector]
     public float currentTimeOfTheDay = 0.0f;
@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
         finiteStateMachine.Push(new HUBState());
         Gallery g = FindObjectOfType<Gallery>();
         
-        //StartCoroutine(TMP_CustomerSpawner());
+        StartCoroutine(TMP_CustomerSpawner());
         //StartCoroutine(TMP_AddPainting(g));
 
     }

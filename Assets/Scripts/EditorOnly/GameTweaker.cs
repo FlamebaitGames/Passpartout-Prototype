@@ -12,10 +12,10 @@ using System.Reflection;
 /// Should this field be visible in the GameTweaker window
 /// </summary>
 [System.AttributeUsage(System.AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-sealed class ShowInTweaker : System.Attribute
+sealed class TweakableField : System.Attribute
 {
     readonly bool sharedAmongAllInstances;
-    public ShowInTweaker (bool sharedAmongAllInstances = false) 
+    public TweakableField (bool sharedAmongAllInstances = false) 
     {
         this.sharedAmongAllInstances = sharedAmongAllInstances;
     }
@@ -24,16 +24,14 @@ sealed class ShowInTweaker : System.Attribute
 }
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-sealed class UsedInTweaker : Attribute
+sealed class TweakableClass : Attribute
 {
-    public UsedInTweaker()
+    public TweakableClass()
     {
     }
 }
 
 public class GameTweaker : EditorWindow {
-    [SerializeField]
-    private string[] editableTypeNames = new string[10];
     [SerializeField]
     private bool open = false;
     private List<Type> editableTypes = new List<Type>();
@@ -42,7 +40,7 @@ public class GameTweaker : EditorWindow {
     private bool hasFocus = false;
     private int refreshTick = 0;
     // Add menu named "My Window" to the Window menu
-    [MenuItem("Window/Game Settings")]
+    [MenuItem("Window/Game Tweaker")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
@@ -58,7 +56,7 @@ public class GameTweaker : EditorWindow {
         {
             foreach (Type type in assembly.GetTypes())
             {
-                if(type.GetCustomAttributes(typeof(UsedInTweaker), true).Length > 0)
+                if(type.GetCustomAttributes(typeof(TweakableClass), true).Length > 0)
                 {
                     editableTypes.Add(type);
                 }
@@ -90,14 +88,14 @@ public class GameTweaker : EditorWindow {
             EditorGUILayout.BeginVertical();
             EditorGUI.indentLevel++;
             foreach (List<UnityEngine.Object> obj in modifyables)
-                DisplayClass(obj);
+                DisplayShared(obj);
             EditorGUI.indentLevel--;
             EditorGUILayout.Separator();
             EditorGUILayout.LabelField("Instanced Settings", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             foreach (List<UnityEngine.Object> list in modifyables)
                 foreach (UnityEngine.Object obj in list)
-                    DisplayObject(obj);
+                    DisplayInstanced(obj);
             EditorGUI.indentLevel--;
             EditorGUILayout.EndVertical();
         }
@@ -121,7 +119,7 @@ public class GameTweaker : EditorWindow {
         RefreshContent();
     }
 
-    private void DisplayClass(List<UnityEngine.Object> objRef)
+    private void DisplayShared(List<UnityEngine.Object> objRef)
     {
         SerializedObject o = new SerializedObject(objRef[0]);
         Type type = objRef[0].GetType();
@@ -133,10 +131,9 @@ public class GameTweaker : EditorWindow {
             bool hasShowinTweakerAttribute = false;
             foreach (Attribute at in field.GetCustomAttributes(true))
             {
-                if (at is ShowInTweaker)
+                if (at is TweakableField)
                 {
-                    Debug.Log(((ShowInTweaker)at).isSharedAmongAllInstances);
-                    hasShowinTweakerAttribute = ((ShowInTweaker)at).isSharedAmongAllInstances;
+                    hasShowinTweakerAttribute = ((TweakableField)at).isSharedAmongAllInstances;
                 }
             }
             if (hasShowinTweakerAttribute)
@@ -156,7 +153,7 @@ public class GameTweaker : EditorWindow {
 
     }
 
-    private void DisplayObject(UnityEngine.Object obj)
+    private void DisplayInstanced(UnityEngine.Object obj)
     {
         Type type = obj.GetType();
         FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy);
@@ -168,7 +165,7 @@ public class GameTweaker : EditorWindow {
             bool hasShowinTweakerAttribute = false;
             foreach (Attribute at in field.GetCustomAttributes(true))
             {
-                if (at is ShowInTweaker && !((ShowInTweaker)at).isSharedAmongAllInstances)
+                if (at is TweakableField && !((TweakableField)at).isSharedAmongAllInstances)
                 {
                     hasShowinTweakerAttribute = true;
                 }

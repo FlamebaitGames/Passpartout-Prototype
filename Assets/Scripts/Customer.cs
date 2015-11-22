@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-[UsedInTweaker]
+[TweakableClass]
 public class Customer : MonoBehaviour {
     public DialogBubble dialog;
-    [ShowInTweaker(true)]
+    [TweakableField(true)]
     public float moveSpeed = 1.0f;
-    [ShowInTweaker]
+    [TweakableField]
     public int test;
 	// Use this for initialization
 	void Start () {
