@@ -7,7 +7,15 @@ public class Customer : MonoBehaviour {
     [TweakableField(true)]
     public float moveSpeed = 1.0f;
     [TweakableField]
-    public int test;
+    public int priceRangeMin = 10;
+    [TweakableField]
+    public int priceRangeMax = 200;
+    [TweakableField, Range(0, 160)]
+    public float minPaintingTime = 10.0f;
+    [TweakableField]
+    public int minFame = 2;
+    [TweakableField, Range(0.0f, 1.5f)]
+    public float minNameFactor = 1.0f;
 	// Use this for initialization
 	void Start () {
         
