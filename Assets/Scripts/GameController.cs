@@ -64,6 +64,7 @@ public class GameController : MonoBehaviour
     private void StartGame()
     {
         finiteStateMachine.Push(new PlayState());
+        BroadcastMessage("OnStartGame");
     }
 
     private void StartDay()
