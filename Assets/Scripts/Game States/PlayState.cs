@@ -22,11 +22,11 @@ public class PlayState : State {
                     if (currentlySelected != null)
                     {
                         if (currentlySelected.activeSelf)
-                            currentlySelected.SendMessage("OnDeselected");
+                            currentlySelected.SendMessage("OnDeselected", SendMessageOptions.DontRequireReceiver);
                         currentlySelected = null;
                     }
                     currentlySelected = hit.collider.gameObject;
-                    currentlySelected.SendMessage("OnSelected");
+                    currentlySelected.SendMessage("OnSelected", SendMessageOptions.DontRequireReceiver);
                 }
                 
             }
@@ -34,7 +34,7 @@ public class PlayState : State {
             {
                 if (currentlySelected != null && currentlySelected.activeSelf)
                 {
-                    currentlySelected.SendMessage("OnDeselected");
+                    currentlySelected.SendMessage("OnDeselected", SendMessageOptions.DontRequireReceiver);
                     currentlySelected = null;
                 }
             }
