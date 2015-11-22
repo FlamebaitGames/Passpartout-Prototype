@@ -18,12 +18,13 @@ public class GameController : MonoBehaviour
     {
         State.Controller = this;
         State.menuPanels = GetComponentInChildren<MenuPanels>();
+        Gallery g = FindObjectOfType<Gallery>();
+        StartCoroutine(TMP_CustomerSpawner());
+        StartCoroutine(TMP_AddPainting(g));
         Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
         finiteStateMachine.Push(new HUBState());
-        Gallery g = FindObjectOfType<Gallery>();
         
-        StartCoroutine(TMP_CustomerSpawner());
-        //StartCoroutine(TMP_AddPainting(g));
+        
 
     }
 

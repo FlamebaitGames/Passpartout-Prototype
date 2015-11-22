@@ -5,6 +5,7 @@ public class Painting : MonoBehaviour {
     
     public string title = "DefaultTitle";
     public int price = 0;
+    public GameObject infoPane;
     public bool visible { get { return gameObject.activeSelf; } }
     /// <summary>
     /// Clears all values of this painting, returning it to a blank slate.
@@ -53,6 +54,11 @@ public class Painting : MonoBehaviour {
         return tx;
     }
 
+    void OnMouseDown()
+    {
+        
+    }
+
 
     //
     //      EVENTS DEFINED BELOW
@@ -61,6 +67,11 @@ public class Painting : MonoBehaviour {
     // User has clicked on this painting
     private void OnSelected()
     {
+        infoPane.SetActive(true);
+    }
 
+    private void OnDeselected()
+    {
+        infoPane.SetActive(false);
     }
 }
