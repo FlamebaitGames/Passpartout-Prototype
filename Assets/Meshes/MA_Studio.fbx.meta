@@ -18,6 +18,8 @@ ModelImporter:
     100020: pWalls
     100022: pWallWood
     100024: pWindows
+    100026: pBookshelf_MeshPart0
+    100028: pBookshelf_MeshPart1
     400000: //RootNode
     400002: pBookshelf
     400004: pDesk
@@ -31,6 +33,8 @@ ModelImporter:
     400020: pWalls
     400022: pWallWood
     400024: pWindows
+    400026: pBookshelf_MeshPart0
+    400028: pBookshelf_MeshPart1
     2300000: pBookshelf
     2300002: pDesk
     2300004: pDoor
@@ -43,6 +47,8 @@ ModelImporter:
     2300018: pWalls
     2300020: pWallWood
     2300022: pWindows
+    2300024: pBookshelf_MeshPart0
+    2300026: pBookshelf_MeshPart1
     3300000: pBookshelf
     3300002: pDesk
     3300004: pDoor
@@ -55,6 +61,8 @@ ModelImporter:
     3300018: pWalls
     3300020: pWallWood
     3300022: pWindows
+    3300024: pBookshelf_MeshPart0
+    3300026: pBookshelf_MeshPart1
     4300000: pRegister
     4300002: pWindows
     4300004: pDesk
@@ -67,6 +75,8 @@ ModelImporter:
     4300018: pWalls
     4300020: pStaffli
     4300022: pPillars
+    4300024: pBookshelf_MeshPart0
+    4300026: pBookshelf_MeshPart1
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -96,7 +106,7 @@ ModelImporter:
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
