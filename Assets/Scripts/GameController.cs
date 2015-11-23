@@ -12,7 +12,9 @@ public class GameController : MonoBehaviour
     public float currentTimeOfTheDay = 0.0f;
     #endregion
     FSM finiteStateMachine = new FSM();
-    
+
+    public int day { get; private set; }
+    public int week { get; private set; }
     // Use this for initialization
     void Start()
     {
@@ -20,7 +22,7 @@ public class GameController : MonoBehaviour
         State.menuPanels = GetComponentInChildren<MenuPanels>();
         Gallery g = FindObjectOfType<Gallery>();
         StartCoroutine(TMP_CustomerSpawner());
-        StartCoroutine(TMP_AddPainting(g));
+        //StartCoroutine(TMP_AddPainting(g));
         Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
         finiteStateMachine.Push(new HUBState());
         
@@ -64,8 +66,11 @@ public class GameController : MonoBehaviour
     //
     private void StartGame()
     {
+        day = 1;
+        week = 1;
         finiteStateMachine.Push(new PlayState());
         BroadcastMessage("OnStartGame");
+        
     }
 
     private void StartDay()
@@ -76,6 +81,18 @@ public class GameController : MonoBehaviour
 
     private void EndDay()
     {
-        finiteStateMachine.Push(new EndDayState());
+        if (day >= 7)
+        {
+            week++;
+            day = 1;
+            finiteStateMachine.Push(new EndWeekState());
+        }
+        else
+        {
+            day++;
+            finiteStateMachine.Push(new EndDayState());
+            
+        }
+        
     }
 }

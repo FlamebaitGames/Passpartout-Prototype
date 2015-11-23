@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EndDayState : State {
+public class EndWeekState : State {
 
     public override void Enter()
     {
         menuPanels.SetPanelsToShow(MenuPanels.Panel.WEEKLY_PANEL | MenuPanels.Panel.MONEY_PANEL);
-        
-        WriteDailyTip();
+        SetWeeklyInfo("Rent: 10\nFood: 133");
     }
 
     public override void Update(float dt)
@@ -15,13 +14,15 @@ public class EndDayState : State {
         
     }
 
-    public override string ToString()
+    public override void Exit()
     {
-        return "End Day State";
+        
     }
 
-    private void WriteDailyTip()
+    private void SetWeeklyInfo(string info)
     {
-        menuPanels.context.weeklyExpensesText.text = "Day is over\n" + "_quote_";
+        menuPanels.context.weeklyExpensesText.text =
+            "Weekly Expenses\n------------------\n" + info;
     }
 }
+
