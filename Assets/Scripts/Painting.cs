@@ -5,6 +5,9 @@ public class Painting : MonoBehaviour {
     
     public string title = "DefaultTitle";
     public int price = 0;
+    public int truePrice = 0;
+    public float timeSpent = 0.0f;
+    public float nameFactor = 1.0f;
     public GameObject infoPane;
     public bool visible { get { return gameObject.activeSelf; } }
     /// <summary>
@@ -21,6 +24,7 @@ public class Painting : MonoBehaviour {
     public void Remove()
     {
         Clear();
+        OnDeselected();
         gameObject.SetActive(false);
     }
 

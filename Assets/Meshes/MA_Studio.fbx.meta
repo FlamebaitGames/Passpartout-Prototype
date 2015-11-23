@@ -1,0 +1,144 @@
+fileFormatVersion: 2
+guid: c96ff9aed496e5242a428177e7c5f216
+timeCreated: 1448273774
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: pBookshelf
+    100004: pDesk
+    100006: pDoor
+    100008: pFloor
+    100010: pMobeus
+    100012: pPillars
+    100014: pRegister
+    100016: pStaffli
+    100018: pStool
+    100020: pWalls
+    100022: pWallWood
+    100024: pWindows
+    100026: pBookshelf_MeshPart0
+    100028: pBookshelf_MeshPart1
+    400000: //RootNode
+    400002: pBookshelf
+    400004: pDesk
+    400006: pDoor
+    400008: pFloor
+    400010: pMobeus
+    400012: pPillars
+    400014: pRegister
+    400016: pStaffli
+    400018: pStool
+    400020: pWalls
+    400022: pWallWood
+    400024: pWindows
+    400026: pBookshelf_MeshPart0
+    400028: pBookshelf_MeshPart1
+    2300000: pBookshelf
+    2300002: pDesk
+    2300004: pDoor
+    2300006: pFloor
+    2300008: pMobeus
+    2300010: pPillars
+    2300012: pRegister
+    2300014: pStaffli
+    2300016: pStool
+    2300018: pWalls
+    2300020: pWallWood
+    2300022: pWindows
+    2300024: pBookshelf_MeshPart0
+    2300026: pBookshelf_MeshPart1
+    3300000: pBookshelf
+    3300002: pDesk
+    3300004: pDoor
+    3300006: pFloor
+    3300008: pMobeus
+    3300010: pPillars
+    3300012: pRegister
+    3300014: pStaffli
+    3300016: pStool
+    3300018: pWalls
+    3300020: pWallWood
+    3300022: pWindows
+    3300024: pBookshelf_MeshPart0
+    3300026: pBookshelf_MeshPart1
+    4300000: pRegister
+    4300002: pWindows
+    4300004: pDesk
+    4300006: pDoor
+    4300008: pWallWood
+    4300010: pFloor
+    4300012: pStool
+    4300014: pMobeus
+    4300016: pBookshelf
+    4300018: pWalls
+    4300020: pStaffli
+    4300022: pPillars
+    4300024: pBookshelf_MeshPart0
+    4300026: pBookshelf_MeshPart1
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

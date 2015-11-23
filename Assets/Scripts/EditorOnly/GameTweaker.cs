@@ -74,11 +74,13 @@ public class GameTweaker : EditorWindow {
             
         }
     }
-
+    private Vector2 scroll = Vector2.zero;
     void OnGUI()
     {
         try
         {
+            scroll = EditorGUILayout.BeginScrollView(scroll);
+            
             GUIStyle s = new GUIStyle();
             s.fontSize = 14;
             s.fontStyle = FontStyle.Bold;
@@ -98,6 +100,7 @@ public class GameTweaker : EditorWindow {
                     DisplayInstanced(obj);
             EditorGUI.indentLevel--;
             EditorGUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
         catch (UnityException e)
         {
