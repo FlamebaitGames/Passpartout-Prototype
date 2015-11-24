@@ -24,6 +24,28 @@ ModelImporter:
     100032: polySurface2
     100034: pPaintBuckets
     100036: transform1
+    100038: pBrush1
+    100040: pBrush2
+    100042: pBrush3
+    100044: pBrush4
+    100046: pBrush5
+    100048: pBrush6
+    100050: polySurface3
+    100052: polySurface4
+    100054: polySurface5
+    100056: polySurface6
+    100058: polySurface7
+    100060: polySurface8
+    100062: pPaintBuckets1
+    100064: pLamp10
+    100066: pLamp11
+    100068: pLamp12
+    100070: pLamp13
+    100072: pLamp14
+    100074: pLamp15
+    100076: pLamp16
+    100078: pLamp17
+    100080: pLamp9
     400000: //RootNode
     400002: pBookshelf
     400004: pDesk
@@ -43,6 +65,28 @@ ModelImporter:
     400032: polySurface2
     400034: pPaintBuckets
     400036: transform1
+    400038: pBrush1
+    400040: pBrush2
+    400042: pBrush3
+    400044: pBrush4
+    400046: pBrush5
+    400048: pBrush6
+    400050: polySurface3
+    400052: polySurface4
+    400054: polySurface5
+    400056: polySurface6
+    400058: polySurface7
+    400060: polySurface8
+    400062: pPaintBuckets1
+    400064: pLamp10
+    400066: pLamp11
+    400068: pLamp12
+    400070: pLamp13
+    400072: pLamp14
+    400074: pLamp15
+    400076: pLamp16
+    400078: pLamp17
+    400080: pLamp9
     2300000: pBookshelf
     2300002: pDesk
     2300004: pDoor
@@ -60,6 +104,28 @@ ModelImporter:
     2300028: polySurface1
     2300030: polySurface2
     2300032: pPaintBuckets
+    2300034: pBrush1
+    2300036: pBrush2
+    2300038: pBrush3
+    2300040: pBrush4
+    2300042: pBrush5
+    2300044: pBrush6
+    2300046: polySurface3
+    2300048: polySurface4
+    2300050: polySurface5
+    2300052: polySurface6
+    2300054: polySurface7
+    2300056: polySurface8
+    2300058: pPaintBuckets1
+    2300060: pLamp10
+    2300062: pLamp11
+    2300064: pLamp12
+    2300066: pLamp13
+    2300068: pLamp14
+    2300070: pLamp15
+    2300072: pLamp16
+    2300074: pLamp17
+    2300076: pLamp9
     3300000: pBookshelf
     3300002: pDesk
     3300004: pDoor
@@ -77,6 +143,28 @@ ModelImporter:
     3300028: polySurface1
     3300030: polySurface2
     3300032: pPaintBuckets
+    3300034: pBrush1
+    3300036: pBrush2
+    3300038: pBrush3
+    3300040: pBrush4
+    3300042: pBrush5
+    3300044: pBrush6
+    3300046: polySurface3
+    3300048: polySurface4
+    3300050: polySurface5
+    3300052: polySurface6
+    3300054: polySurface7
+    3300056: polySurface8
+    3300058: pPaintBuckets1
+    3300060: pLamp10
+    3300062: pLamp11
+    3300064: pLamp12
+    3300066: pLamp13
+    3300068: pLamp14
+    3300070: pLamp15
+    3300072: pLamp16
+    3300074: pLamp17
+    3300076: pLamp9
     4300000: pRegister
     4300002: pWindows
     4300004: pDesk
@@ -94,6 +182,28 @@ ModelImporter:
     4300028: polySurface1
     4300030: polySurface2
     4300032: pPaintBuckets
+    4300034: pPaintBuckets1
+    4300036: pBrush1
+    4300038: pBrush2
+    4300040: pBrush3
+    4300042: pBrush4
+    4300044: pBrush5
+    4300046: pBrush6
+    4300048: polySurface3
+    4300050: polySurface4
+    4300052: polySurface5
+    4300054: polySurface6
+    4300056: polySurface7
+    4300058: polySurface8
+    4300060: pLamp9
+    4300062: pLamp10
+    4300064: pLamp11
+    4300066: pLamp12
+    4300068: pLamp13
+    4300070: pLamp14
+    4300072: pLamp15
+    4300074: pLamp16
+    4300076: pLamp17
     9500000: //RootNode
   materials:
     importMaterials: 1
