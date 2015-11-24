@@ -20,6 +20,10 @@ ModelImporter:
     100024: pWindows
     100026: pBookshelf_MeshPart0
     100028: pBookshelf_MeshPart1
+    100030: polySurface1
+    100032: polySurface2
+    100034: pPaintBuckets
+    100036: transform1
     400000: //RootNode
     400002: pBookshelf
     400004: pDesk
@@ -35,6 +39,10 @@ ModelImporter:
     400024: pWindows
     400026: pBookshelf_MeshPart0
     400028: pBookshelf_MeshPart1
+    400030: polySurface1
+    400032: polySurface2
+    400034: pPaintBuckets
+    400036: transform1
     2300000: pBookshelf
     2300002: pDesk
     2300004: pDoor
@@ -49,6 +57,9 @@ ModelImporter:
     2300022: pWindows
     2300024: pBookshelf_MeshPart0
     2300026: pBookshelf_MeshPart1
+    2300028: polySurface1
+    2300030: polySurface2
+    2300032: pPaintBuckets
     3300000: pBookshelf
     3300002: pDesk
     3300004: pDoor
@@ -63,6 +74,9 @@ ModelImporter:
     3300022: pWindows
     3300024: pBookshelf_MeshPart0
     3300026: pBookshelf_MeshPart1
+    3300028: polySurface1
+    3300030: polySurface2
+    3300032: pPaintBuckets
     4300000: pRegister
     4300002: pWindows
     4300004: pDesk
@@ -77,6 +91,9 @@ ModelImporter:
     4300022: pPillars
     4300024: pBookshelf_MeshPart0
     4300026: pBookshelf_MeshPart1
+    4300028: polySurface1
+    4300030: polySurface2
+    4300032: pPaintBuckets
     9500000: //RootNode
   materials:
     importMaterials: 1
