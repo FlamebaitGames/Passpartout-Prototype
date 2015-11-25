@@ -46,6 +46,7 @@ ModelImporter:
     100076: pLamp16
     100078: pLamp17
     100080: pLamp9
+    100082: pCylinder1
     400000: //RootNode
     400002: pBookshelf
     400004: pDesk
@@ -87,6 +88,7 @@ ModelImporter:
     400076: pLamp16
     400078: pLamp17
     400080: pLamp9
+    400082: pCylinder1
     2300000: pBookshelf
     2300002: pDesk
     2300004: pDoor
@@ -126,6 +128,7 @@ ModelImporter:
     2300072: pLamp16
     2300074: pLamp17
     2300076: pLamp9
+    2300078: pCylinder1
     3300000: pBookshelf
     3300002: pDesk
     3300004: pDoor
@@ -165,6 +168,7 @@ ModelImporter:
     3300072: pLamp16
     3300074: pLamp17
     3300076: pLamp9
+    3300078: pCylinder1
     4300000: pRegister
     4300002: pWindows
     4300004: pDesk
@@ -204,6 +208,7 @@ ModelImporter:
     4300072: pLamp15
     4300074: pLamp16
     4300076: pLamp17
+    4300078: pCylinder1
     9500000: //RootNode
   materials:
     importMaterials: 1
