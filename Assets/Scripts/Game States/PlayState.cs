@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayState : State {
     private GameObject currentlySelected;
+
+    private string[] dayPhases = { "Morning", "Day", "Evening", "Night" };
+
     public override void Enter()
     {
         menuPanels.SetPanelsToShow(MenuPanels.Panel.MONEY_PANEL | MenuPanels.Panel.PAINTING_CANVAS);
@@ -39,7 +42,14 @@ public class PlayState : State {
                 }
             }
         }
+        menuPanels.context.timeOfDayText.text = dayPhases[(int)((Controller.currentTimeOfTheDay / Controller.dayInSeconds) * (dayPhases.Length-1))];
         
+        
+    }
+
+    private void UpdateMoneyFameText(string money, string fame)
+    {
+        menuPanels.context.goldFameText.text = money + " Euro\n" + "Fame: " + fame;
     }
     public override string ToString()
     {

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class MenuPanels : MonoBehaviour {
@@ -11,6 +12,21 @@ public class MenuPanels : MonoBehaviour {
     [SerializeField]
     private GameObject mainMenuPanel;
 
+    [SerializeField]
+    private Text goldFameText;
+    [SerializeField]
+    private Text weeklyExpensesText;
+    [SerializeField]
+    private Text timeOfDayText;
+
+    public struct MenuContext
+    {
+        public Text goldFameText;
+        public Text weeklyExpensesText;
+        public Text timeOfDayText;
+    }
+
+    public MenuContext context;
     public enum Panel
     {
         NONE = 0,
@@ -32,5 +48,11 @@ public class MenuPanels : MonoBehaviour {
     void Start()
     {
         Debug.Assert(paintingCanvasPanel != null && bottomBarMoneyPanel != null && weeklyPanel != null && mainMenuPanel != null, "Not all MenuPanels have been set!");
+        Debug.Assert(goldFameText != null && weeklyExpensesText != null && timeOfDayText != null, "Not all fields set!");
+        context = new MenuContext();
+        context.goldFameText = goldFameText;
+        context.weeklyExpensesText = weeklyExpensesText;
+        context.timeOfDayText = timeOfDayText;
+        
     }
 }
