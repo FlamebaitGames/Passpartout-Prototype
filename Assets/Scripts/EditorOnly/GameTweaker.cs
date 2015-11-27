@@ -206,7 +206,16 @@ public class GameTweaker : EditorWindow {
 
             for (int i = 0; i < prop.arraySize; i++)
             {
-                EditorGUILayout.PropertyField(prop.GetArrayElementAtIndex(i));
+                SerializedProperty item = prop.GetArrayElementAtIndex(i);
+                if (item.isArray)
+                {
+                    DrawArrayProperty(item);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(item);
+                }
+                
             }
                
             /*while (propChild.NextVisible(false))
