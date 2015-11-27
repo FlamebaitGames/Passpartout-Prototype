@@ -200,19 +200,29 @@ public class GameTweaker : EditorWindow {
         if (prop.isExpanded)
         {
             EditorGUI.indentLevel++;
-            while (prop.NextVisible(true))
+            SerializedProperty propChild = prop.Copy();
+            propChild.NextVisible(true);
+            EditorGUILayout.PropertyField(propChild);
+
+            for (int i = 0; i < prop.arraySize; i++)
             {
-                if (prop.isArray)
-                {
-                    DrawArrayProperty(prop);
-                }
-                else
-                {
-                    EditorGUILayout.PropertyField(prop);
-                }
-
-
+                EditorGUILayout.PropertyField(prop.GetArrayElementAtIndex(i));
             }
+               
+            /*while (propChild.NextVisible(false))
+                {
+                    i++;
+                    if (prop.isArray)
+                    {
+                        DrawArrayProperty(prop);
+                    }
+                    else
+                    {
+                    
+                    }
+                    EditorGUILayout.PropertyField(propChild);
+
+                }*/
             EditorGUI.indentLevel--;
         }
         
