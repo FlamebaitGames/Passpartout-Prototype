@@ -17,7 +17,7 @@ public class Customer : MonoBehaviour {
     public int priceRangeMin = 10;
     [TweakableField]
     public int priceRangeMax = 200;
-    [TweakableField, Tooltip("How much the price of the painting can deviate from the true price")]
+    [TweakableField, Tooltip("How much the price of the painting can deviate from the true price (upwards)")]
     public int spendingLeeway = 200;
     [TweakableField, Range(0, 160)]
     public float minPaintingTime = 10.0f;

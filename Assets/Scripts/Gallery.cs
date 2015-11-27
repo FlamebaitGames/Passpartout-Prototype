@@ -43,6 +43,7 @@ public class Gallery : MonoBehaviour {
     private void PurchasePainting(Painting painting)
     {
         // TODO - add money to player & modify fame
+        SendMessageUpwards("AddMoney", painting.price);
         painting.Remove();
     }
 
