@@ -23,4 +23,9 @@ public class State {
         // Tick the world time here, if a state do not wish to do so (HUB-state for example) just don't call State.Update(dt) in child Update-method.
         Controller.TickTime(dt);
     }
+
+    public virtual void RefreshUI()
+    {
+
+    }
 }

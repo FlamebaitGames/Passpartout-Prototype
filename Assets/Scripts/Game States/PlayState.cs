@@ -3,9 +3,13 @@ using System.Collections;
 
 public class PlayState : State {
     private GameObject currentlySelected;
+    private Player player;
 
     private string[] dayPhases = { "Morning", "Day", "Evening", "Night" };
-
+    public PlayState()
+    {
+        player = GameObject.FindObjectOfType<Player>();
+    }
     public override void Enter()
     {
         menuPanels.SetPanelsToShow(MenuPanels.Panel.MONEY_PANEL | MenuPanels.Panel.PAINTING_CANVAS);
@@ -59,5 +63,18 @@ public class PlayState : State {
     private void SpawnCustomer()
     {
         Controller.BroadcastMessage("AddCustomer");
+    }
+
+    public override void RefreshUI()
+    {
+        if (player != null)
+        {
+            UpdateMoneyFameText(player.money.ToString(), player.fame.ToString());
+        }
+        else
+        {
+            Debug.LogError("Player not linked!");
+            Debug.Break();
+        }
     }
 }
