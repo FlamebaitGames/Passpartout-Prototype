@@ -25,6 +25,14 @@ public class Customer : MonoBehaviour {
     public int minFame = 2;
     [TweakableField, Range(0.0f, 1.5f)]
     public float minNameFactor = 1.0f;
+    [TweakableField, SerializeField]
+    private string[] buyResponses;
+    [TweakableField, SerializeField]
+    private string[] noAffordResponses;
+    [TweakableField, SerializeField]
+    private string[] notMyTasteResponses;
+    [TweakableField, SerializeField]
+    private string[] shitResponses;
 
     private Player player;
 	// Use this for initialization
@@ -36,6 +44,12 @@ public class Customer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	}
+
+    private string RandomLine(string[] lines)
+    {
+        if (lines.Length == 0) return "Err: No lines!";
+        return lines[Random.Range(0, lines.Length)];
+    }
 
     public void BeginTraversingPath(PathPoint[] path)
     {
@@ -82,22 +96,22 @@ public class Customer : MonoBehaviour {
         Evaluation ev = IsWorthPurchasing(painting);
         switch(ev) {
             case Evaluation.SHIT:
-                dialog.vBubble[0].vMessage = "It's shit!";
+                dialog.vBubble[0].vMessage = RandomLine(shitResponses);
                 dialog.ShowBubble();
                 yield return new WaitForSeconds(4.5f);
                 break;
             case Evaluation.AFFORDABLE:
-                dialog.vBubble[0].vMessage = "I could buy it, but I don't like it.";
+                dialog.vBubble[0].vMessage = RandomLine(notMyTasteResponses);
                 dialog.ShowBubble();
                 yield return new WaitForSeconds(4.5f);
                 break;
             case Evaluation.MY_TASTE:
-                dialog.vBubble[0].vMessage = "Looks nice, but a bit pricey for me.";
+                dialog.vBubble[0].vMessage = RandomLine(noAffordResponses);
                 dialog.ShowBubble();
                 yield return new WaitForSeconds(4.5f);
                 break;
             case Evaluation.BOTH:
-                dialog.vBubble[0].vMessage = "I must have this!";
+                dialog.vBubble[0].vMessage = RandomLine(buyResponses);
                 dialog.ShowBubble();
                 SendMessageUpwards("PurchasePainting", painting);
                 yield return new WaitForSeconds(4.2f);
