@@ -36,7 +36,7 @@ public class GameTweaker : EditorWindow {
     private bool open = false;
     private List<Type> editableTypes = new List<Type>();
     private List<List<UnityEngine.Object>> modifyables = new List<List<UnityEngine.Object>>();
-
+    private Dictionary<int, bool> arrShown;
     private bool hasFocus = false;
     private int refreshTick = 0;
     // Add menu named "My Window" to the Window menu
@@ -51,6 +51,7 @@ public class GameTweaker : EditorWindow {
 
     private void RefreshContent()
     {
+        arrShown = new Dictionary<int, bool>();
         editableTypes = new List<Type>();
         foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
@@ -60,6 +61,7 @@ public class GameTweaker : EditorWindow {
                 {
                     editableTypes.Add(type);
                 }
+                
             }
         }
         modifyables = new List<List<UnityEngine.Object>>();
@@ -142,7 +144,15 @@ public class GameTweaker : EditorWindow {
             if (hasShowinTweakerAttribute)
             {
                 var prop = o.FindProperty(field.Name);
-                EditorGUILayout.PropertyField(prop);
+                if (prop.isArray)
+                {
+                    DrawArrayProperty(prop);
+                } 
+                else
+                {
+                    EditorGUILayout.PropertyField(prop);
+                }
+                
                 for (int i = 1; i < objRef.Count; i++)
                 {
                     SerializedObject o2 = new SerializedObject(objRef[i]);
@@ -154,6 +164,58 @@ public class GameTweaker : EditorWindow {
         }
         EditorGUI.indentLevel--;
 
+    }
+    private bool booly;
+
+    private void DrawArrayProperty(SerializedProperty prop)
+    {
+        /*int id = prop.serializedObject.targetObject.GetInstanceID();
+        if (!arrShown.ContainsKey(id))
+        {
+            arrShown.Add(id, false);
+        }
+        arrShown[id] = EditorGUILayout.Foldout(arrShown[id], prop.name);
+        if (true)
+        {
+
+            int nArrSize = EditorGUILayout.IntField("Size", prop.arraySize);
+            for (int i = 0; i < prop.arraySize; i++)
+            {
+                
+                SerializedProperty propItem = prop.GetArrayElementAtIndex(i);
+                
+                if (propItem.isArray)
+                {
+                    Debug.Log("SUBARRAY");
+                    DrawArrayProperty(propItem);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(propItem);
+                }
+            }
+            prop.arraySize = nArrSize;
+        }*/
+        EditorGUILayout.PropertyField(prop);
+        if (prop.isExpanded)
+        {
+            EditorGUI.indentLevel++;
+            while (prop.NextVisible(true))
+            {
+                if (prop.isArray)
+                {
+                    DrawArrayProperty(prop);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(prop);
+                }
+
+
+            }
+            EditorGUI.indentLevel--;
+        }
+        
     }
 
     private void DisplayInstanced(UnityEngine.Object obj)
@@ -175,7 +237,16 @@ public class GameTweaker : EditorWindow {
             }
             if (hasShowinTweakerAttribute)
             {
-                EditorGUILayout.PropertyField(o.FindProperty(field.Name));
+                SerializedProperty prop = o.FindProperty(field.Name);
+                if (prop.isArray)
+                {
+                    DrawArrayProperty(prop);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(prop);
+                }
+                
             }
         }
         o.ApplyModifiedProperties();
