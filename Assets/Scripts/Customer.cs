@@ -10,7 +10,7 @@ public class Customer : MonoBehaviour {
         AFFORDABLE = 1 << 2,
         BOTH = MY_TASTE | AFFORDABLE
     }
-    public DialogBubble dialog;
+    private DialogBubble dialog;
     [TweakableField(true)]
     public float moveSpeed = 1.0f;
     [TweakableField]
@@ -34,15 +34,19 @@ public class Customer : MonoBehaviour {
     [TweakableField, SerializeField]
     private string[] shitResponses;
 
+    private Vector3 lookTarget = Vector3.zero;
+
     private Player player;
 	// Use this for initialization
 	void Start () {
         player = FindObjectOfType<Player>();
+        dialog = GetComponentInChildren<DialogBubble>();
         Debug.Assert(player != null);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        FacePoint(lookTarget);
 	}
 
     private string RandomLine(string[] lines)
@@ -69,19 +73,33 @@ public class Customer : MonoBehaviour {
             ev |= Evaluation.AFFORDABLE;
         return ev;
     }
-    
+
+
+    private void FacePoint(Vector3 point)
+    {
+        point.y = 0.0f;
+        Quaternion a = transform.rotation;
+        Quaternion b = Quaternion.LookRotation((point - transform.position).normalized, transform.up);
+        float angle = Quaternion.Angle(a, b);
+        transform.rotation = Quaternion.Lerp(a, b, Time.deltaTime * angle * 0.1f);
+    }
 
     private IEnumerator Travel(PathPoint[] path)
     {
         foreach (PathPoint p in path)
         {
+            GetComponentInChildren<Animator>().SetFloat("Moving", 1.0f);
             while (Vector3.Distance(transform.position, p.point) > 0.1f)
             {
+                
                 transform.position = Vector3.MoveTowards(transform.position, p.point, Time.deltaTime);
+                lookTarget = p.point;
                 yield return null;
             }
             if (p.canLookAtPainting)
             {
+                GetComponentInChildren<Animator>().SetFloat("Moving", 0.0f);
+                lookTarget = p.targetPainting.transform.position;
                 yield return new WaitForSeconds(0.3f);
                 yield return StartCoroutine(ExaminePainting(p.targetPainting));
                 

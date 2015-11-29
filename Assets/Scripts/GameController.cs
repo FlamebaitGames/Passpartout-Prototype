@@ -25,6 +25,16 @@ public class GameController : MonoBehaviour
         //StartCoroutine(TMP_AddPainting(g));
         Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
         finiteStateMachine.Push(new HUBState());
+
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
+        g.AddNewPainting(Painting.CreateSampleTexture2D());
         
         
 
