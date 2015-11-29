@@ -5,10 +5,19 @@ public class PlayState : State {
     private GameObject currentlySelected;
     private Player player;
 
+    private float spawnTicker = 0.0f;
+    private readonly float spawnTime = 24.0f;
+    private readonly float spawnDeviation = 3.0f;
+    private readonly float maxLapTime = 50.0f;
+
     private string[] dayPhases = { "Morning", "Day", "Evening", "Night" };
-    public PlayState()
+    public PlayState(float spawnTime, float spawnDeviation, float maxLapTime)
     {
         player = GameObject.FindObjectOfType<Player>();
+        this.spawnTime = spawnTime;
+        this.spawnDeviation = spawnDeviation;
+        this.maxLapTime = maxLapTime;
+        spawnTicker = spawnTime;
     }
     public override void Enter()
     {
@@ -47,8 +56,12 @@ public class PlayState : State {
             }
         }
         menuPanels.context.timeOfDayText.text = dayPhases[(int)((Controller.currentTimeOfTheDay / Controller.dayInSeconds) * (dayPhases.Length-1))];
-        
-        
+        spawnTicker -= Time.deltaTime;
+        if (spawnTicker <= 0.0f)
+        {
+            spawnTicker = spawnTime + Random.Range(0.0f, spawnDeviation);
+            SpawnCustomer();
+        }
     }
 
     private void UpdateMoneyFameText(string money, string fame)
@@ -62,7 +75,8 @@ public class PlayState : State {
 
     private void SpawnCustomer()
     {
-        Controller.BroadcastMessage("AddCustomer");
+        if (Controller.dayInSeconds - Controller.currentTimeOfTheDay > maxLapTime)
+            Controller.BroadcastMessage("AddCustomer");
     }
 
     public override void RefreshUI()

@@ -13,6 +13,13 @@ public class GameController : MonoBehaviour
     #endregion
     FSM finiteStateMachine = new FSM();
 
+    [TweakableField]
+    public float maxCustomerLapTime = 40.0f;
+    [TweakableField]
+    public float customerSpawnInterval = 24.0f;
+    [TweakableField, Range(0.0f, 20.0f)]
+    public float customerSpawnDeviation = 3.0f;
+
     public int day { get; private set; }
     public int week { get; private set; }
     // Use this for initialization
@@ -21,7 +28,6 @@ public class GameController : MonoBehaviour
         State.Controller = this;
         State.menuPanels = GetComponentInChildren<MenuPanels>();
         Gallery g = FindObjectOfType<Gallery>();
-        StartCoroutine(TMP_CustomerSpawner());
         //StartCoroutine(TMP_AddPainting(g));
         Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
         finiteStateMachine.Push(new HUBState());
@@ -52,15 +58,6 @@ public class GameController : MonoBehaviour
         if (currentTimeOfTheDay >= dayInSeconds) EndDay();
     }
 
-    private IEnumerator TMP_CustomerSpawner()
-    {
-        while (true)
-        {
-            BroadcastMessage("AddCustomer");
-            yield return new WaitForSeconds(18.0f);
-        }
-    }
-
     private IEnumerator TMP_AddPainting(Gallery g)
     {
         while (true)
@@ -78,7 +75,7 @@ public class GameController : MonoBehaviour
     {
         day = 1;
         week = 1;
-        finiteStateMachine.Push(new PlayState());
+        finiteStateMachine.Push(new PlayState(customerSpawnInterval, customerSpawnDeviation, maxCustomerLapTime));
         BroadcastMessage("OnStartGame");
         
     }

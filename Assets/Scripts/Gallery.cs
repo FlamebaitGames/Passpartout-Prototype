@@ -64,7 +64,6 @@ public class Gallery : MonoBehaviour {
         
         foreach (Painting p in paintings)
         {
-            Debug.Log(p);
             if (!p.gameObject.activeSelf)
             {
                 p.gameObject.SetActive(true);
