@@ -12,7 +12,6 @@ public class DialogBubble : MonoBehaviour {
 	public GameObject vCurrentBubble = null; //just to make sure we cannot open multiple bubble at the same time.
 	public bool IsTalking = false;
 	public List<PixelBubble> vBubble = new List<PixelBubble>();
-    public Transform orientor;
 	private PixelBubble vActiveBubble = null;
     
 
@@ -133,8 +132,9 @@ public class DialogBubble : MonoBehaviour {
 				
 				vCurrentBubble = vBubbleObject; //attach it to the player
 				vBubbleObject.transform.parent = transform; //make him his parent
-
-                vBubbleObject.transform.rotation = Camera.main.transform.rotation;
+                vBubbleObject.transform.localPosition = Vector3.zero;
+                vBubbleObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                //vBubbleObject.transform.rotation = Camera.main.transform.rotation;
             }
             else if (vActiveBubble == vBub && vActiveBubble.vClickToCloseBubble)
 			{
@@ -146,8 +146,8 @@ public class DialogBubble : MonoBehaviour {
 
 	void Update () 
 	{
-        if(vCurrentBubble != null)
-            vCurrentBubble.transform.position = Camera.main.transform.position + (transform.position - Camera.main.transform.position).normalized * 3.0f;
+        //if(vCurrentBubble != null)
+         //   vCurrentBubble.transform.position = Camera.main.transform.position + (transform.position - Camera.main.transform.position).normalized * 3.0f;
 
 		//can't have a current character 
 		if (!IsTalking)
