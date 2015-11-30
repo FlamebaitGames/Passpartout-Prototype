@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class PlayState : State {
-    private GameObject currentlySelected;
     private Player player;
 
     private float spawnTicker = 0.0f;
@@ -31,29 +30,37 @@ public class PlayState : State {
         {
             Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 50.0f))
-            {
-                if (!hit.collider.gameObject.CompareTag("DoesNotDeselect"))
+            if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 50.0f))
                 {
-                    if (currentlySelected != null)
+                    if (!hit.collider.gameObject.CompareTag("DoesNotDeselect"))
                     {
-                        if (currentlySelected.activeSelf)
-                            currentlySelected.SendMessage("OnDeselected", SendMessageOptions.DontRequireReceiver);
-                        currentlySelected = null;
+                        /*if (currentlySelected != null)
+                        {
+                            if (currentlySelected.activeSelf)
+                                currentlySelected.SendMessage("OnDeselected", SendMessageOptions.DontRequireReceiver);
+                            currentlySelected = null;
+                        }
+                        currentlySelected = hit.collider.gameObject;
+                        currentlySelected.SendMessage("OnSelected", SendMessageOptions.DontRequireReceiver);*/
+                        menuPanels.context.paintingSettingsPanel.Unlink();
+                        Painting p;
+                        if ((p = hit.collider.gameObject.GetComponent<Painting>()) != null)
+                            menuPanels.context.paintingSettingsPanel.Link(p);
                     }
-                    currentlySelected = hit.collider.gameObject;
-                    currentlySelected.SendMessage("OnSelected", SendMessageOptions.DontRequireReceiver);
-                }
                 
-            }
-            else
-            {
-                if (currentlySelected != null && currentlySelected.activeSelf)
+                }
+                else
                 {
-                    currentlySelected.SendMessage("OnDeselected", SendMessageOptions.DontRequireReceiver);
-                    currentlySelected = null;
+                    /*if (currentlySelected != null && currentlySelected.activeSelf)
+                    {
+                        currentlySelected.SendMessage("OnDeselected", SendMessageOptions.DontRequireReceiver);
+                        currentlySelected = null;
+                    }*/
+                    menuPanels.context.paintingSettingsPanel.Unlink();
                 }
             }
+            
         }
         menuPanels.context.timeOfDayText.text = dayPhases[(int)((Controller.currentTimeOfTheDay / Controller.dayInSeconds) * (dayPhases.Length-1))];
         spawnTicker -= Time.deltaTime;

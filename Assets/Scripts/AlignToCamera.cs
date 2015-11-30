@@ -20,13 +20,11 @@ public class AlignToCamera : MonoBehaviour {
         Vector3 lineDir = (Camera.main.transform.position - lineOrigin).normalized;
         Vector3 planeNormal = Camera.main.transform.forward;
 
-        Debug.DrawRay(lineOrigin, lineDir * 10.0f, Color.red, 50.0f);
         if (LinePlaneIntersection(out intersect, lineOrigin, lineDir, planeNormal, planeOrigin))
         {
             transform.position = intersect;
         }
 	}
-
 
     public static bool LinePlaneIntersection(out Vector3 intersection, Vector3 linePoint, Vector3 lineVec, Vector3 planeNormal, Vector3 planePoint)
     {

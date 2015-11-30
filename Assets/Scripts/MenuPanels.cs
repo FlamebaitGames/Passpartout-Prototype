@@ -11,7 +11,9 @@ public class MenuPanels : MonoBehaviour {
     private GameObject weeklyPanel;
     [SerializeField]
     private GameObject mainMenuPanel;
-
+    [SerializeField]
+    private PaintingSettingsPanel paintingSettingsPanel;
+    
     [SerializeField]
     private Text goldFameText;
     [SerializeField]
@@ -21,6 +23,7 @@ public class MenuPanels : MonoBehaviour {
 
     public struct MenuContext
     {
+        public PaintingSettingsPanel paintingSettingsPanel;
         public Text goldFameText;
         public Text weeklyExpensesText;
         public Text timeOfDayText;
@@ -53,6 +56,8 @@ public class MenuPanels : MonoBehaviour {
         context.goldFameText = goldFameText;
         context.weeklyExpensesText = weeklyExpensesText;
         context.timeOfDayText = timeOfDayText;
+        context.paintingSettingsPanel = paintingSettingsPanel;
+        
         
     }
 }
