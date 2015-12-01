@@ -6,8 +6,8 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public Texture2D canvas;
     public Camera cam;
 
-
-    private Vector2 lastMousePoistion = Vector2.zero;
+    public Color currentColor = Color.black;
+    private Vector2 lastDragPosition = Vector2.zero;
 	// Use this for initialization
 	void Start () {
         var original = gameObject.GetComponent<UnityEngine.UI.RawImage>().mainTexture as Texture2D;
@@ -35,6 +35,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     }
     public void OnDrag(PointerEventData data)
     {
+        return;
         RectTransform rect = GetComponent<RectTransform>();
         Vector2 pos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, data.pointerCurrentRaycast.screenPosition, data.pressEventCamera, out pos);
@@ -42,9 +43,27 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         pos.y = rect.rect.height - Mathf.Abs(pos.y);
         pos.y /= rect.rect.height / canvas.height;
         pos.x /= rect.rect.width / canvas.width;
-        DrawCircle(canvas, (int)pos.x, (int)pos.y, 16, Color.black);
-        canvas.Apply();
+
+        if (lastDragPosition == Vector2.zero)
+        {
+            DrawCircle(canvas, (int)pos.x, (int)pos.y, 64, Color.black);
+        }
+        else
+        {
+            int dx = (int)pos.x - (int)lastDragPosition.x;
+            int dy = (int)pos.y - (int)lastDragPosition.y;
+
+            for (int i = 1; i <= 8; i++)
+            {
+                int x = (int)lastDragPosition.x + dx * (1 / i);
+                int y = (int)lastDragPosition.y + dy * (1 / i);
+                DrawCircle(canvas, x, y, 64, Color.black);
+            }
+        }
         
+        canvas.Apply();
+
+        lastDragPosition = pos;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -53,7 +72,29 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
 	// Update is called once per frame
 	void Update () {
-        /*
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentColor = Color.black;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentColor = Color.blue;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentColor = Color.green;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentColor = Color.white;
+        }
+
+
+
+
         if (Input.GetMouseButton(0))
         {
             RectTransform rect = GetComponent<RectTransform>();
@@ -63,10 +104,32 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             pos.y = rect.rect.height - Mathf.Abs(pos.y);
             pos.y /= rect.rect.height / canvas.height;
             pos.x /= rect.rect.width / canvas.width;
-            DrawCircle(canvas, (int)pos.x, (int)pos.y, 16, Color.black);
+
+            if (lastDragPosition == Vector2.zero)
+            {
+                DrawCircle(canvas, (int)pos.x, (int)pos.y, 16, Color.black);
+            }
+            else
+            {
+                int dx = (int)pos.x - (int)lastDragPosition.x;
+                int dy = (int)pos.y - (int)lastDragPosition.y;
+
+                for (int i = 1; i <= 8; i++)
+                {
+                    int x = (int)lastDragPosition.x + dx * (1 / i);
+                    int y = (int)lastDragPosition.y + dy * (1 / i);
+                    DrawCircle(canvas, x, y, 16, currentColor);
+                }
+            }
+
             canvas.Apply();
+
+            lastDragPosition = pos;
         }
-        */
+        else
+        {
+            lastDragPosition = Vector2.zero;
+        }
 	}
 
 
