@@ -23,8 +23,10 @@ public class Player : MonoBehaviour {
 
     public void RemoveMoney(int cost)
     {
-        Debug.Assert(CanAfford(cost), "Can't afford to pay for this!");
+        //Debug.Assert(CanAfford(cost), "Can't afford to pay for this!");
         money -= cost;
+        if (money < 0) SendMessage("OnLose");
+        
     }
 
     public void AddMoney(int cost)
