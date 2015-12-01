@@ -3,13 +3,13 @@ using System.Collections;
 
 public class PaintComponent : MonoBehaviour {
     public Texture2D canvas;
-    public RenderTexture rtexture;
-    public Camera camera;
+    public Camera cam;
 	// Use this for initialization
 	void Start () {
-        canvas = new Texture2D(550, 900);
-        
+        var original = gameObject.GetComponent<UnityEngine.UI.RawImage>().mainTexture as Texture2D;
 
+        canvas = new Texture2D(original.width, original.height);
+        gameObject.GetComponent<UnityEngine.UI.RawImage>().texture = canvas;
 
         for (int y = 0; y < canvas.height; ++y)
         {
@@ -21,49 +21,72 @@ public class PaintComponent : MonoBehaviour {
         canvas.Apply();
     }
 
-    void OnGUI()
-    {
-        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), canvas);
-    }
-	
 	// Update is called once per frame
 	void Update () {
-        canvas.SetPixel(100, 100, Color.green);
-        canvas.Apply();
-        //gameObject.GetComponent<Renderer>().material.mainTexture = canvas;
-        if (!Input.GetMouseButton(0)) return;
-
-        RaycastHit hit = new RaycastHit();
-        if (!Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit))
+        /*
+        if (!Input.GetMouseButton(0))
             return;
 
-        Renderer renderer = hit.collider.GetComponent<Renderer>();
+        RaycastHit hit;
+        if (!Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit))
+            return;
 
-        MeshCollider collider = (MeshCollider)hit.collider;
+        Renderer rend = hit.transform.GetComponent<Renderer>();
+        MeshCollider meshCollider = hit.collider as MeshCollider;
+        if (rend == null || rend.sharedMaterial == null || rend.sharedMaterial.mainTexture == null || meshCollider == null)
+            return;
 
-        if (renderer != null || renderer.sharedMaterial == null
-            || renderer.sharedMaterial.mainTexture == null || collider == null) return;
+        Texture2D tex = canvas;
+        Vector2 pixelUV = hit.textureCoord;
+        pixelUV.x *= tex.width;
+        pixelUV.y *= tex.height;
+        tex.SetPixel((int)pixelUV.x, (int)pixelUV.y, Color.black);
+        tex.Apply();
+        */
 
-        int total = 70 * 30;
+        Vector2 s = new Vector2(canvas.width, canvas.height);
+        Vector2 p = gameObject.GetComponent<RectTransform>().position;
+        Rect r = gameObject.GetComponent<RectTransform>().rect;
+        Vector2 m = Input.mousePosition;
+        float relWidth = Screen.width / 1920.0f;
+        float relHeight = Screen.height / 1080.0f;
 
-        Color[] colors = new Color[total];
-        for (int i = 0; i < total; ++i)
+        m.y *= relHeight;
+        m.x *= relWidth;
+        // Bounds check
+        if (r.Contains(m))
         {
-            colors[i] = Color.black;
+            int x = (int)(m.x);
+            int y = (int)(m.y);
+
+            DrawCircle(canvas, (int)m.x, (int)m.y,16, Color.black);
+            canvas.Apply();
         }
-
-        //Texture texture = renderer.material.mainTexture;
-        Vector2 PixelUV = hit.textureCoord2;
-
-        PixelUV.x *= canvas.width;
-        PixelUV.y *= canvas.height;
-
-
-        RenderTexture.active = rtexture;
-        canvas.SetPixel(100, 100, Color.green);
-        //canvas.SetPixels((int)PixelUV.x, (int)PixelUV.y, 70, 30, colors);
-        canvas.Apply();
-        RenderTexture.active = null;
-        
 	}
+
+
+    public void DrawCircle(Texture2D tex, int cx, int cy, int r, Color col)
+    {
+        var pixels = canvas.GetPixels32();
+        int x, y, px, nx, py, ny, d;
+
+        for (x = 0; x <= r; x++)
+        {
+            d = (int)Mathf.Ceil(Mathf.Sqrt(r * r - x * x));
+            for (y = 0; y <= d; y++)
+            {
+                px = cx + x;
+                nx = cx - x;
+                py = cy + y;
+                ny = cy - y;
+
+                tex.SetPixel(px, py, col);
+                tex.SetPixel(nx, py, col);
+
+                tex.SetPixel(px, ny, col);
+                tex.SetPixel(nx, ny, col);
+
+            }
+        }
+    }
 }
