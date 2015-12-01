@@ -5,17 +5,14 @@ public class PlayState : State {
     private Player player;
 
     private float spawnTicker = 0.0f;
-    private readonly float spawnTime = 24.0f;
-    private readonly float spawnDeviation = 3.0f;
-    private readonly float maxLapTime = 50.0f;
+    private float spawnTime { get { return Controller.customerSpawnInterval; } }
+    private float spawnDeviation { get { return Controller.customerSpawnDeviation; } }
+    private float maxLapTime { get { return Controller.maxCustomerLapTime; } }
 
     private string[] dayPhases = { "Morning", "Day", "Evening", "Night" };
-    public PlayState(float spawnTime, float spawnDeviation, float maxLapTime)
+    public PlayState()
     {
         player = GameObject.FindObjectOfType<Player>();
-        this.spawnTime = spawnTime;
-        this.spawnDeviation = spawnDeviation;
-        this.maxLapTime = maxLapTime;
         spawnTicker = spawnTime;
     }
     public override void Enter()

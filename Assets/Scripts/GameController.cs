@@ -13,12 +13,36 @@ public class GameController : MonoBehaviour
     #endregion
     FSM finiteStateMachine = new FSM();
 
+    // PlayState Fields
     [TweakableField]
     public float maxCustomerLapTime = 40.0f;
     [TweakableField]
     public float customerSpawnInterval = 24.0f;
     [TweakableField, Range(0.0f, 20.0f)]
     public float customerSpawnDeviation = 3.0f;
+
+    // EndDayState Fields
+    [TweakableField]
+    public string[] endDayQuotes;
+
+    // EndWeekState Fields
+    [TweakableField]
+    public int rentCost = 120;
+    [TweakableField]
+    public int foodCost = 60;
+    [TweakableField]
+    public int foodCostDeviation = 10;
+    [TweakableField]
+    public int baguetteCost = 15;
+    [TweakableField]
+    public int baguetteDeviation = 5;
+    [TweakableField]
+    public int wineCost = 25;
+    [TweakableField]
+    public int wineCostDeviation = 10;
+    [TweakableField]
+    public int unionCost = 5;
+
 
     public int day { get; private set; }
     public int week { get; private set; }
@@ -30,18 +54,8 @@ public class GameController : MonoBehaviour
         Gallery g = FindObjectOfType<Gallery>();
         //StartCoroutine(TMP_AddPainting(g));
         Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
-        finiteStateMachine.Push(new HUBState());
-
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
-        g.AddNewPainting(Painting.CreateSampleTexture2D());
         
+        Reset();
         
 
     }
@@ -75,7 +89,7 @@ public class GameController : MonoBehaviour
     {
         day = 1;
         week = 1;
-        finiteStateMachine.Push(new PlayState(customerSpawnInterval, customerSpawnDeviation, maxCustomerLapTime));
+        finiteStateMachine.Push(new PlayState());
         BroadcastMessage("OnStartGame");
         
     }
@@ -102,5 +116,19 @@ public class GameController : MonoBehaviour
             
         }
         
+    }
+
+    private void Reset()
+    {
+        BroadcastMessage("OnReset", SendMessageOptions.DontRequireReceiver);
+        finiteStateMachine.Clear();
+        finiteStateMachine.Push(new HUBState());
+    }
+
+    private void OnLose()
+    {
+        
+
+        finiteStateMachine.Push(new LoseState());
     }
 }

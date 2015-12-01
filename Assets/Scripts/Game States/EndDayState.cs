@@ -3,6 +3,14 @@ using System.Collections;
 
 public class EndDayState : State {
 
+    public string quote
+    {
+        get
+        {
+            if (Controller.endDayQuotes.Length == 0) return "ERR: No Quotes!";
+            return Controller.endDayQuotes[Random.Range(0, Controller.endDayQuotes.Length)];
+        }
+    }
     public override void Enter()
     {
         menuPanels.SetPanelsToShow(MenuPanels.Panel.WEEKLY_PANEL | MenuPanels.Panel.MONEY_PANEL);
@@ -22,6 +30,7 @@ public class EndDayState : State {
 
     private void WriteDailyTip()
     {
-        menuPanels.context.weeklyExpensesText.text = "Day is over\n" + "_quote_";
+        menuPanels.context.weeklyExpensesText.text = "Day is over\n" + quote;
     }
+    
 }

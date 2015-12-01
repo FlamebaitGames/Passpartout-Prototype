@@ -44,4 +44,9 @@ public class FSM {
             return null;
         }
     }
+
+    public void Clear()
+    {
+        states.Clear();
+    }
 }

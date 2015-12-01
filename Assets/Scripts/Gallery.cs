@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class Gallery : MonoBehaviour {
 
 
@@ -82,17 +82,19 @@ public class Gallery : MonoBehaviour {
     private void AddCustomer()
     {
         //Customer c = Instantiate<Customer>(customerPrefab); // may be replaced by permanent stash
-        Customer c = null;
+        
+        
+        List<Customer> custs = new List<Customer>();
         foreach (Customer cust in customers)
         {
-            if (!cust.gameObject.activeSelf) c = cust;
-            if (c != null) break;
+            if (!cust.gameObject.activeSelf) custs.Add(cust);
         }
-        if (c == null)
+        if (custs.Count == 0)
         {
             Debug.LogError("Ran out of customers!");
             Debug.Break();
         }
+        Customer c = custs[Random.Range(0, custs.Count)];
         c.gameObject.SetActive(true);
         c.transform.position = galleryPath[0].point;
         c.BeginTraversingPath(galleryPath);
@@ -101,5 +103,14 @@ public class Gallery : MonoBehaviour {
     private void OnCustomerExit(Customer customer)
     {
         customer.gameObject.SetActive(false);
+    }
+
+    private void OnReset()
+    {
+        foreach (Customer c in GetComponentsInChildren<Customer>())
+        {
+            c.StopAllCoroutines();
+            c.gameObject.SetActive(false);
+        }
     }
 }

@@ -12,6 +12,8 @@ public class MenuPanels : MonoBehaviour {
     [SerializeField]
     private GameObject mainMenuPanel;
     [SerializeField]
+    private GameObject losePanel;
+    [SerializeField]
     private PaintingSettingsPanel paintingSettingsPanel;
     
     [SerializeField]
@@ -37,7 +39,8 @@ public class MenuPanels : MonoBehaviour {
         MONEY_PANEL = 1 << 2,
         WEEKLY_PANEL = 1 << 3,
         MAIN_MENU_PANEL = 1 << 4,
-        ALL = MAIN_MENU_PANEL | WEEKLY_PANEL | MONEY_PANEL | PAINTING_CANVAS
+        LOSE_PANEL = 1 << 5,
+        ALL = MAIN_MENU_PANEL | WEEKLY_PANEL | MONEY_PANEL | PAINTING_CANVAS | LOSE_PANEL
     }
 
     public void SetPanelsToShow(Panel panel)
@@ -46,6 +49,7 @@ public class MenuPanels : MonoBehaviour {
         bottomBarMoneyPanel.SetActive((panel & Panel.MONEY_PANEL) == Panel.MONEY_PANEL);
         weeklyPanel.SetActive((panel & Panel.WEEKLY_PANEL) == Panel.WEEKLY_PANEL);
         mainMenuPanel.SetActive((panel & Panel.MAIN_MENU_PANEL) == Panel.MAIN_MENU_PANEL);
+        losePanel.SetActive((panel & Panel.LOSE_PANEL) == Panel.LOSE_PANEL);
     }
 
     void Start()
@@ -57,6 +61,7 @@ public class MenuPanels : MonoBehaviour {
         context.weeklyExpensesText = weeklyExpensesText;
         context.timeOfDayText = timeOfDayText;
         context.paintingSettingsPanel = paintingSettingsPanel;
+        
         
         
     }
