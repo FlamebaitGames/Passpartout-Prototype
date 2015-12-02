@@ -5,11 +5,16 @@ using System.Collections.Generic;
 public class Customer : MonoBehaviour {
     public enum Evaluation
     {
-        SHIT = 0,
-        MY_TASTE = 1 << 1,
-        AFFORDABLE = 1 << 2,
-        BOTH = MY_TASTE | AFFORDABLE
+        WORTH = 0,
+        OUTSIDE_PRICE_RANGE = 1 << 1,
+        OUTSIDE_PRICE_LEEWAY = 1 << 2,
+        BELOW_TIME_REQ = 1 << 3,
+        BELOW_FAME_REQ = 1 << 4,
+        BELOW_NAMEFAC_REQ = 1 << 5,
+        LAST,
+        ALL = LAST * 2 - 1
     }
+
     private DialogBubble dialog;
     [TweakableField(true)]
     public float moveSpeed = 1.0f;
@@ -26,13 +31,17 @@ public class Customer : MonoBehaviour {
     [TweakableField, Range(0.0f, 1.5f)]
     public float minNameFactor = 1.0f;
     [TweakableField, SerializeField]
-    private string[] buyResponses;
+    private string[] buyResponses = { "This i must have!" };
     [TweakableField, SerializeField]
-    private string[] noAffordResponses;
+    private string[] outsidePricerangeResponses = { "This is out of my price range." };
     [TweakableField, SerializeField]
-    private string[] notMyTasteResponses;
+    private string[] outsideLeewayResponses = {"This painting is far overpriced." };
     [TweakableField, SerializeField]
-    private string[] shitResponses;
+    private string[] belowTimespentResponses = { "Not much work went in to this one..." };
+    [TweakableField, SerializeField]
+    private string[] belowFameResponses = { "This guy really is a nobody." };
+    [TweakableField, SerializeField]
+    private string[] belowNameFactorResponses = { "The name is bad." };
 
     private Vector3 lookTarget = Vector3.zero;
 
@@ -63,14 +72,14 @@ public class Customer : MonoBehaviour {
 
     private Evaluation IsWorthPurchasing(Painting painting)
     {
-        Evaluation ev = Evaluation.SHIT;
-        if (minNameFactor <= painting.nameFactor &&
-            minFame <= player.fame)
-            ev |= Evaluation.MY_TASTE;
-        if (priceRangeMin <= painting.price &&
-            painting.price <= priceRangeMax &&
-            (painting.price - painting.truePrice) <= spendingLeeway)
-            ev |= Evaluation.AFFORDABLE;
+        Evaluation ev = Evaluation.WORTH;
+        
+        if (spendingLeeway < (painting.price - painting.truePrice)) ev |= Evaluation.OUTSIDE_PRICE_LEEWAY;
+        if (priceRangeMax < painting.price || painting.price < priceRangeMin) ev |= Evaluation.OUTSIDE_PRICE_RANGE;
+        if (painting.nameFactor < minNameFactor) ev |= Evaluation.BELOW_NAMEFAC_REQ;
+        if (player.fame < minFame) ev |= Evaluation.BELOW_FAME_REQ;
+        if (painting.timeSpent < minPaintingTime) ev |= Evaluation.BELOW_TIME_REQ;
+
         return ev;
     }
 
@@ -112,7 +121,66 @@ public class Customer : MonoBehaviour {
     private IEnumerator ExaminePainting(Painting painting)
     {
         Evaluation ev = IsWorthPurchasing(painting);
-        switch(ev) {
+        List<Evaluation> indicies = new List<Evaluation>();
+        for (int i = 1; i <= 5; i++)
+        {
+            Evaluation e = (Evaluation)(1 << i);
+            if ((ev & e) == e)
+            {
+                indicies.Add(e);
+            }
+        }
+
+        if (indicies.Count > 0)
+        {
+            Evaluation eval = indicies[Random.Range(0, indicies.Count)];
+            switch (eval)
+            {
+                case Evaluation.BELOW_FAME_REQ:
+                    dialog.vBubble[0].vMessage = RandomLine(belowFameResponses);
+                    dialog.ShowBubble();
+                    yield return new WaitForSeconds(4.2f);
+                    
+                    break;
+                case Evaluation.BELOW_NAMEFAC_REQ:
+                    dialog.vBubble[0].vMessage = RandomLine(belowNameFactorResponses);
+                    dialog.ShowBubble();
+                    yield return new WaitForSeconds(4.2f);
+                    break;
+                case Evaluation.BELOW_TIME_REQ:
+                    dialog.vBubble[0].vMessage = RandomLine(belowTimespentResponses);
+                    dialog.ShowBubble();
+                    yield return new WaitForSeconds(4.2f);
+                    break;
+                case Evaluation.OUTSIDE_PRICE_LEEWAY:
+                    dialog.vBubble[0].vMessage = RandomLine(outsideLeewayResponses);
+                    dialog.ShowBubble();
+                    yield return new WaitForSeconds(4.2f);
+                    break;
+                case Evaluation.OUTSIDE_PRICE_RANGE:
+                    dialog.vBubble[0].vMessage = RandomLine(outsidePricerangeResponses);
+                    dialog.ShowBubble();
+                    yield return new WaitForSeconds(4.2f);
+                    break;
+                default:
+                    Debug.LogError("Evaluation type unknown: " + eval.ToString());
+                    Debug.Break();
+                    break;
+            }
+        }
+        else
+        {
+            dialog.vBubble[0].vMessage = RandomLine(buyResponses);
+            dialog.ShowBubble();
+            SendMessageUpwards("PurchasePainting", painting);
+            yield return new WaitForSeconds(4.2f);
+        }
+        Destroy(dialog.GetComponentInChildren<Appear>().gameObject);
+
+        
+
+        
+        /*switch(ev) {
             case Evaluation.SHIT:
                 dialog.vBubble[0].vMessage = RandomLine(shitResponses);
                 dialog.ShowBubble();
@@ -134,6 +202,6 @@ public class Customer : MonoBehaviour {
                 SendMessageUpwards("PurchasePainting", painting);
                 yield return new WaitForSeconds(4.2f);
                 break;
-        }
+        }*/
     }
 }

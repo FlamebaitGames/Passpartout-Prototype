@@ -5,14 +5,33 @@ public class Player : MonoBehaviour {
 
     [TweakableField, SerializeField]
     private int startingMoney;
-
+    [TweakableField, SerializeField]
+    private int startingFame = 3;
     public int money { get; private set; }
 
-    public int fame = 2;
+    public int fame { get; private set; }
+    private int famePoints;
+
+    private int[] fameReq = {
+                                2,
+                                5,
+                                9,
+                                14,
+                                20,
+                                28,
+                                38,
+                                50,
+                                80,
+                                120
+                            };
+
 
     void OnStartGame()
     {
-        money = startingMoney;
+        fame = startingFame;
+        famePoints = fameReq[fame - 1];
+        SetMoney(startingMoney);
+        
     }
 
 
@@ -25,6 +44,7 @@ public class Player : MonoBehaviour {
     {
         //Debug.Assert(CanAfford(cost), "Can't afford to pay for this!");
         money -= cost;
+        SendMessage("OnRefreshUI");
         if (money < 0) SendMessage("OnLose");
         
     }
@@ -32,10 +52,22 @@ public class Player : MonoBehaviour {
     public void AddMoney(int cost)
     {
         money += cost;
+        SendMessage("OnRefreshUI");
     }
 
     public void SetMoney(int money)
     {
         this.money = money;
+        SendMessage("OnRefreshUI");
+    }
+
+    public void IncrementFamePoints()
+    {
+        famePoints++;
+        if (famePoints >= fameReq[fame])
+        {
+            fame++;
+            SendMessage("OnRefreshUI");
+        }
     }
 }
