@@ -16,7 +16,7 @@ public class Gallery : MonoBehaviour
         p.title = textTitle.text;
         p.price = int.Parse(textPrice.text);
         p.truePrice = p.price;
-        p.nameFactor = Mathf.Clamp(-2 + (((p.title.GetHashCode() % 200) + 101) / 100), -1, 1);
+        p.nameFactor = Mathf.Clamp(-2 + (((p.title.GetHashCode() % 200) + 101) / 100), -1, 1) + 1; // temp change as it should go from 0-2 (or something like that)
         p.timeSpent = paintComponent.GetElapsedTime();
     }
     #endregion
@@ -59,8 +59,15 @@ public class Gallery : MonoBehaviour
 
     private void PurchasePainting(Painting painting)
     {
-        // TODO - add money to player & modify fame
         SendMessageUpwards("AddMoney", painting.price);
+        float priceDeviation = (float)painting.price / (float)painting.truePrice;
+        if(priceDeviation >= 1.0f) {
+            SendMessageUpwards("IncrementFamePoints");
+        }
+        else if(priceDeviation < 0.8f)
+        {
+            SendMessageUpwards("DecrementFamePoints");
+        }
         painting.Remove();
     }
 
