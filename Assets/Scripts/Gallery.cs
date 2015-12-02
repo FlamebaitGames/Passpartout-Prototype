@@ -1,8 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class Gallery : MonoBehaviour {
+public class Gallery : MonoBehaviour
+{
 
+    #region SuperHackSorryNiklasForEverything
+    public UnityEngine.UI.Text textPrice;
+    public UnityEngine.UI.Text textTitle;
+    public GameObject PaintCanvasObject;
+
+    public void ConfirmPainting()
+    {
+        PaintComponent paintComponent = PaintCanvasObject.GetComponent<PaintComponent>();
+        Painting p = AddNewPainting(paintComponent.canvas);
+        p.title = textTitle.text;
+        p.price = int.Parse(textPrice.text);
+        p.nameFactor = Mathf.Clamp(-2 + (((p.title.GetHashCode() % 200) + 101) / 100), -1, 1);
+        p.timeSpent = paintComponent.GetElapsedTime();
+    }
+    #endregion
 
     public Painting[] paintings { get; private set; }
     public Customer[] customers { get; private set; }
