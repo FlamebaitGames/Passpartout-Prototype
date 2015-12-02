@@ -346,9 +346,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             }
         }
         canvas.Apply();
-
-        Gallery.hack = canvas;
-        
+        elapsedTime = 0.0f;
     }
 
     public float GetElapsedTime()

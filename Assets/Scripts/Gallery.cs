@@ -15,6 +15,7 @@ public class Gallery : MonoBehaviour
         Painting p = AddNewPainting(paintComponent.canvas);
         p.title = textTitle.text;
         p.price = int.Parse(textPrice.text);
+        p.truePrice = p.price;
         p.nameFactor = Mathf.Clamp(-2 + (((p.title.GetHashCode() % 200) + 101) / 100), -1, 1);
         p.timeSpent = paintComponent.GetElapsedTime();
     }
