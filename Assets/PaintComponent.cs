@@ -8,8 +8,36 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public Color currentColor = Color.black;
     private Vector2 lastDragPosition = Vector2.zero;
+
+    enum PaletteColors
+    {
+        YELLOW,
+        GREEN,
+        BLUE,
+        PURPLE,
+        RED,
+        BROWN,
+        WHITE,
+        BLACK
+    }
+
+    private int paletteIndex = (int)PaletteColors.BLACK;
+
+    // Palette Colors
+    public Color C_YELLOW;
+    public Color C_GREEN;
+    public Color C_BLUE;
+    public Color C_PURPLE;
+    public Color C_RED;
+    public Color C_BROWN;
+    public Color C_WHITE;
+    public Color C_BLACK;
+
 	// Use this for initialization
 	void Start () {
+        // Setup the color palette.
+
+
         var original = gameObject.GetComponent<UnityEngine.UI.RawImage>().mainTexture as Texture2D;
 
         canvas = new Texture2D((int)GetComponent<RectTransform>().rect.width, (int)GetComponent<RectTransform>().rect.height);
@@ -72,6 +100,21 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
 	// Update is called once per frame
 	void Update () {
+        float d = Input.GetAxis("Mouse ScrollWheel");
+
+        if (d > 0.0f)
+        {
+            paletteIndex++;
+            if (paletteIndex > 7) paletteIndex = 0;
+        } else if (d < 0.0f)
+        {
+            paletteIndex--;
+            if (paletteIndex < 0) paletteIndex = 7;
+        }
+
+        currentColor = GetCurrentColor((PaletteColors)paletteIndex);
+
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             currentColor = Color.black;
@@ -165,5 +208,21 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             }
         }
         tex.SetPixels32(pixels);
+    }
+
+    private Color GetCurrentColor(PaletteColors color)
+    {
+        switch (color)
+        {
+            case PaletteColors.YELLOW:  return C_YELLOW;
+            case PaletteColors.GREEN:   return C_GREEN;
+            case PaletteColors.BLUE:    return C_BLUE;
+            case PaletteColors.PURPLE:  return C_PURPLE;
+            case PaletteColors.RED:     return C_RED;
+            case PaletteColors.BROWN:   return C_BROWN;
+            case PaletteColors.WHITE:   return C_WHITE;
+            case PaletteColors.BLACK:   return C_BLACK;
+            default: return C_BLACK;
+        }
     }
 }
