@@ -5,12 +5,27 @@ using System.Collections.Generic;
 public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler {
     public Texture2D canvas;
     public Camera cam;
+	public AudioSource paintSound1;
+	public AudioSource paintSound2;
+	public AudioSource paintSound3;
+	public AudioSource paintSound4;
+	public bool fadeIn;
+	public bool fadeOut;
+	public int randomSound;
 
     public Color currentColor = Color.black;
     private Vector2 lastDragPosition = Vector2.zero;
 	// Use this for initialization
 	void Start () {
         var original = gameObject.GetComponent<UnityEngine.UI.RawImage>().mainTexture as Texture2D;
+		fadeIn = false;
+		fadeOut = false;
+		paintSound1.volume = 0;
+		paintSound2.volume = 0;
+		paintSound3.volume = 0;
+		paintSound4.volume = 0;
+
+
 
         canvas = new Texture2D((int)GetComponent<RectTransform>().rect.width, (int)GetComponent<RectTransform>().rect.height);
         gameObject.GetComponent<UnityEngine.UI.RawImage>().texture = canvas;
@@ -31,6 +46,50 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     
     public void OnBeginDrag(PointerEventData eventData)
     {
+		randomSound = (Random.Range (1, 4));
+
+		if (paintSound1.isPlaying == true)
+		{
+			randomSound = 1;
+		}
+
+		if (paintSound2.isPlaying == true)
+		{
+			randomSound = 2;
+		}
+
+		if (paintSound3.isPlaying == true)
+		{
+			randomSound = 3;
+		}
+
+		if (paintSound4.isPlaying == true)
+		{
+			randomSound = 4;
+		}
+
+		if (paintSound1.isPlaying == false && randomSound == 1) 
+		{
+			paintSound1.Play ();
+		}
+
+		if (paintSound2.isPlaying == false && randomSound == 2) 
+		{
+			paintSound2.Play ();
+		}
+
+		if (paintSound3.isPlaying == false && randomSound == 3) 
+		{
+			paintSound3.Play ();
+		}
+
+		if (paintSound4.isPlaying == false && randomSound == 4) 
+		{
+			paintSound4.Play ();
+		}
+
+		fadeOut = false;
+		fadeIn = true;
 
     }
     public void OnDrag(PointerEventData data)
@@ -68,6 +127,9 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public void OnEndDrag(PointerEventData eventData)
     {
+		fadeIn = false;
+		fadeOut = true;
+
     }
 
 	// Update is called once per frame
@@ -92,7 +154,73 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             currentColor = Color.white;
         }
 
+		if (fadeIn == true) 
+		{
+			if (paintSound1.volume < 0.8)
+			{
+				paintSound1.volume = (paintSound1.volume + 0.03f);
+			}
 
+			if (paintSound2.volume < 0.8)
+			{
+				paintSound2.volume = (paintSound2.volume + 0.03f);
+			}
+
+			if (paintSound3.volume < 0.8)
+			{
+				paintSound3.volume = (paintSound3.volume + 0.03f);
+			}
+
+			if (paintSound4.volume < 0.8)
+			{
+				paintSound4.volume = (paintSound4.volume + 0.03f);
+			}
+
+			else
+			{
+				fadeIn = false;
+			}
+		
+			/*if(paintSound1.volume >= 0.4)
+			{
+				fadeIn = false;
+			}
+			*/
+
+		}
+
+		if (fadeOut == true) 
+		{
+			if (paintSound1.volume > 0)
+			{
+				paintSound1.volume = (paintSound1.volume - 0.03f);
+			}
+
+			if (paintSound2.volume > 0)
+			{
+				paintSound2.volume = (paintSound2.volume - 0.03f);
+			}
+
+			if (paintSound3.volume > 0)
+			{
+				paintSound3.volume = (paintSound3.volume - 0.03f);
+			}
+
+			if (paintSound4.volume > 0)
+			{
+				paintSound4.volume = (paintSound4.volume - 0.03f);
+			}
+
+			else
+			{
+				fadeOut = false;
+				paintSound1.Stop();
+				paintSound2.Stop();
+				paintSound3.Stop();
+				paintSound4.Stop();
+
+			}
+		}
 
 
         if (Input.GetMouseButton(0))
