@@ -78,7 +78,7 @@ public class Customer : MonoBehaviour {
         if (priceRangeMax < painting.price || painting.price < priceRangeMin) ev |= Evaluation.OUTSIDE_PRICE_RANGE;
         if (painting.nameFactor < minNameFactor) ev |= Evaluation.BELOW_NAMEFAC_REQ;
         if (player.fame < minFame) ev |= Evaluation.BELOW_FAME_REQ;
-        if (minPaintingTime < painting.timeSpent) ev |= Evaluation.BELOW_TIME_REQ;
+        if (painting.timeSpent < minPaintingTime) ev |= Evaluation.BELOW_TIME_REQ;
 
         return ev;
     }
