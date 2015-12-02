@@ -56,8 +56,6 @@ public class GameController : MonoBehaviour
         Debug.Assert(State.menuPanels != null, "Menu Panels have not been added to the scene! Drag the canvas prefab into scene");
         
         Reset();
-        
-
     }
 
     // Update is called once per frame
