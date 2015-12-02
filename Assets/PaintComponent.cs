@@ -13,10 +13,12 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	public bool fadeOut;
 	public int randomSound;
 
+    public int brushSize = 16;
+
     public Color currentColor = Color.black;
     private Vector2 lastDragPosition = Vector2.zero;
 
-    enum PaletteColors
+    public enum PaletteColors
     {
         YELLOW,
         GREEN,
@@ -163,39 +165,17 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	// Update is called once per frame
 	void Update () {
         float d = Input.GetAxis("Mouse ScrollWheel");
-
-        if (d > 0.0f)
+        if (d < 0.0f)
         {
-            paletteIndex++;
-            if (paletteIndex > 7) paletteIndex = 0;
-        } else if (d < 0.0f)
+            brushSize--;
+        }
+        else if (d > 0.0f)
         {
-            paletteIndex--;
-            if (paletteIndex < 0) paletteIndex = 7;
+            brushSize++;
         }
 
-        currentColor = GetCurrentColor((PaletteColors)paletteIndex);
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            currentColor = Color.black;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            currentColor = Color.blue;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            currentColor = Color.green;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            currentColor = Color.white;
-        }
+        if (brushSize < 4) brushSize = 4;
+        if (brushSize > 32) brushSize = 32;
 
 		if (fadeIn == true) 
 		{
@@ -269,6 +249,8 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         if (Input.GetMouseButton(0))
         {
             RectTransform rect = GetComponent<RectTransform>();
+            Rect r = GetComponent<RectTransform>().rect;
+
             Vector2 pos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, Input.mousePosition, null, out pos);
 
@@ -278,7 +260,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
             if (lastDragPosition == Vector2.zero)
             {
-                DrawCircle(canvas, (int)pos.x, (int)pos.y, 16, Color.black);
+                DrawCircle(canvas, (int)pos.x, (int)pos.y, brushSize, Color.black);
             }
             else
             {
@@ -289,7 +271,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
                 {
                     int x = (int)lastDragPosition.x + dx * (1 / i);
                     int y = (int)lastDragPosition.y + dy * (1 / i);
-                    DrawCircle(canvas, x, y, 16, currentColor);
+                    DrawCircle(canvas, x, y, brushSize, currentColor);
                 }
             }
 
@@ -338,7 +320,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         tex.SetPixels32(pixels);
     }
 
-    private Color GetCurrentColor(PaletteColors color)
+    public Color GetCurrentColor(PaletteColors color)
     {
         switch (color)
         {
@@ -352,5 +334,10 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             case PaletteColors.BLACK:   return C_BLACK;
             default: return C_BLACK;
         }
+    }
+
+    public void SetCurrentColor(int c)
+    {
+        currentColor = GetCurrentColor((PaletteColors)c);
     }
 }
