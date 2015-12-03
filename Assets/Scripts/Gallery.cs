@@ -5,19 +5,29 @@ public class Gallery : MonoBehaviour
 {
 
     #region SuperHackSorryNiklasForEverything
-    public UnityEngine.UI.Text textPrice;
-    public UnityEngine.UI.Text textTitle;
+    public UnityEngine.UI.InputField inputFieldPrice;
+    public UnityEngine.UI.InputField inputFieldTitle;
+
     public GameObject PaintCanvasObject;
 
     public void ConfirmPainting()
     {
+        // Make sure the text works 
+        if (inputFieldTitle.text.Length <= 0) return;
+        if (inputFieldPrice.text.Length <= 0) return;
+        if (inputFieldTitle.text == "TITLE") return;
+
         PaintComponent paintComponent = PaintCanvasObject.GetComponent<PaintComponent>();
         Painting p = AddNewPainting(paintComponent.canvas);
-        p.title = textTitle.text;
-        p.price = int.Parse(textPrice.text);
+        p.title = inputFieldTitle.text;
+        p.price = int.Parse(inputFieldPrice.text);
         p.truePrice = p.price;
         p.nameFactor = Mathf.Clamp(-2 + (((p.title.GetHashCode() % 200) + 101) / 100), -1, 1) + 1; // temp change as it should go from 0-2 (or something like that)
         p.timeSpent = paintComponent.GetElapsedTime();
+        paintComponent.ClearAll();
+
+        inputFieldPrice.text = "25";
+        inputFieldTitle.text = "TITLE";
     }
     #endregion
 
