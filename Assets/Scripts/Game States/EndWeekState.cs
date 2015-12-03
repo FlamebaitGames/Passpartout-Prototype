@@ -8,6 +8,12 @@ public class EndWeekState : State {
     public int baguettesExpense;
     public int wineExpense;
     public int unionExpense;
+    private Player player;
+
+    public EndWeekState()
+    {
+        player = Controller.GetComponent<Player>();
+    }
 
     public override void Enter()
     {
@@ -45,6 +51,23 @@ public class EndWeekState : State {
     {
         menuPanels.context.weeklyExpensesText.text =
             "Weekly Expenses\n------------------\n" + info;
+    }
+    private void UpdateMoneyFameText(string money, string fame)
+    {
+        menuPanels.context.goldFameText.text = money + " Euro\n" + "Fame: " + fame;
+    }
+
+    public override void RefreshUI()
+    {
+        if (player != null)
+        {
+            UpdateMoneyFameText(player.money.ToString(), player.fame.ToString());
+        }
+        else
+        {
+            Debug.LogError("Player not linked!");
+            Debug.Break();
+        }
     }
 }
 

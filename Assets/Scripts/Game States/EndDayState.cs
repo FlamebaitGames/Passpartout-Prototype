@@ -11,6 +11,12 @@ public class EndDayState : State {
             return Controller.endDayQuotes[Random.Range(0, Controller.endDayQuotes.Length)];
         }
     }
+    private Player player;
+
+    public EndDayState()
+    {
+        player = Controller.GetComponent<Player>();
+    }
     public override void Enter()
     {
         menuPanels.SetPanelsToShow(MenuPanels.Panel.WEEKLY_PANEL | MenuPanels.Panel.MONEY_PANEL);
@@ -32,5 +38,21 @@ public class EndDayState : State {
     {
         menuPanels.context.weeklyExpensesText.text = "Day is over\n" + quote;
     }
-    
+    private void UpdateMoneyFameText(string money, string fame)
+    {
+        menuPanels.context.goldFameText.text = money + " Euro\n" + "Fame: " + fame;
+    }
+
+    public override void RefreshUI()
+    {
+        if (player != null)
+        {
+            UpdateMoneyFameText(player.money.ToString(), player.fame.ToString());
+        }
+        else
+        {
+            Debug.LogError("Player not linked!");
+            Debug.Break();
+        }
+    }
 }
