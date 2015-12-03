@@ -131,4 +131,9 @@ public class GameController : MonoBehaviour
 
         finiteStateMachine.Push(new LoseState());
     }
+
+    private void OnRefreshUI()
+    {
+        finiteStateMachine.Peek().RefreshUI();
+    }
 }
