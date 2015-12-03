@@ -22,6 +22,8 @@ public class MenuPanels : MonoBehaviour {
     private Text weeklyExpensesText;
     [SerializeField]
     private Text timeOfDayText;
+    [SerializeField]
+    private MoneyPopper moneyPopper;
 
     public struct MenuContext
     {
@@ -29,6 +31,7 @@ public class MenuPanels : MonoBehaviour {
         public Text goldFameText;
         public Text weeklyExpensesText;
         public Text timeOfDayText;
+        public MoneyPopper moneyPopper;
     }
 
     public MenuContext context;
@@ -61,7 +64,7 @@ public class MenuPanels : MonoBehaviour {
         context.weeklyExpensesText = weeklyExpensesText;
         context.timeOfDayText = timeOfDayText;
         context.paintingSettingsPanel = paintingSettingsPanel;
-        
+        context.moneyPopper = moneyPopper;
         
         
     }
