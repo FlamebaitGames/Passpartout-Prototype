@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.Analytics;
 [TweakableClass]
 public class GameController : MonoBehaviour
 {
@@ -49,6 +49,7 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Analytics.SetUserId(SystemInfo.deviceUniqueIdentifier);
         State.Controller = this;
         State.menuPanels = GetComponentInChildren<MenuPanels>();
         Gallery g = FindObjectOfType<Gallery>();
@@ -101,7 +102,7 @@ public class GameController : MonoBehaviour
     private void EndDay()
     {
         BroadcastMessage("OnEndDay", SendMessageOptions.DontRequireReceiver);
-        if (day >= 7)
+        if (day >= 5)
         {
             week++;
             day = 1;

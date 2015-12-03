@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	public AudioSource paintSound1;
 	public AudioSource paintSound2;
 	public AudioSource paintSound3;
+	public AudioSource paintSound4;
 	public AudioSource selectSound;
 	public bool fadeIn;
 	public bool fadeOut;
@@ -52,6 +53,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 		paintSound1.volume = 0;
 		paintSound2.volume = 0;
 		paintSound3.volume = 0;
+		paintSound4.volume = 0;
 
 
         ClearAll();
@@ -81,7 +83,10 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 			randomSound = 3;
 		}
 
-
+		if (paintSound4.isPlaying == true)
+		{
+			randomSound = 4;
+		}
 
 		if (paintSound1.isPlaying == false && randomSound == 1) 
 		{
@@ -97,7 +102,11 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 		{
 			paintSound3.Play ();
 		}
-	
+
+		if (paintSound4.isPlaying == false && randomSound == 4) 
+		{
+			paintSound4.Play ();
+		}
 
 		fadeOut = false;
 		fadeIn = true;
@@ -177,7 +186,10 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 				paintSound3.volume = (paintSound3.volume + 0.03f);
 			}
 
-
+			if (paintSound4.volume < 0.8)
+			{
+				paintSound4.volume = (paintSound4.volume + 0.03f);
+			}
 
 			else
 			{
@@ -209,6 +221,10 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 				paintSound3.volume = (paintSound3.volume - 0.03f);
 			}
 
+			if (paintSound4.volume > 0)
+			{
+				paintSound4.volume = (paintSound4.volume - 0.03f);
+			}
 
 			else
 			{
@@ -216,6 +232,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 				paintSound1.Stop();
 				paintSound2.Stop();
 				paintSound3.Stop();
+				paintSound4.Stop();
 
 			}
 		}

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
@@ -8,6 +8,10 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	public AudioSource paintSound1;
 	public AudioSource paintSound2;
 	public AudioSource paintSound3;
+<<<<<<< HEAD
+=======
+	public AudioSource paintSound4;
+>>>>>>> master
 	public AudioSource selectSound;
 	public bool fadeIn;
 	public bool fadeOut;
