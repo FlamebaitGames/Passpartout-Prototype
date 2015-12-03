@@ -12,6 +12,7 @@ public class Gallery : MonoBehaviour
 
     public void ConfirmPainting()
     {
+        if (slotsLeft == 0) return;
         Debug.Log("CONFIRM PAINTING");
         // Make sure the text works 
         if (inputFieldTitle.text.Length <= 0) return;
@@ -100,10 +101,10 @@ public class Gallery : MonoBehaviour
     {
         SendMessageUpwards("AddMoney", painting.price);
         float priceDeviation = (float)painting.price / (float)painting.truePrice;
-        if(priceDeviation >= 1.0f) {
+        if(priceDeviation >= 0.9f) {
             SendMessageUpwards("IncrementFamePoints");
         }
-        else if(priceDeviation < 0.8f)
+        else if(priceDeviation < 0.5f)
         {
             SendMessageUpwards("DecrementFamePoints");
         }

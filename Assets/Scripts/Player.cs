@@ -12,6 +12,15 @@ public class Player : MonoBehaviour {
     public int money { get; private set; }
 
     public int fame { get; private set; }
+
+    public string fameTitle
+    {
+        get
+        {
+            return fameTitles[fame - 1];
+        }
+    }
+
     private int famePoints;
 
     private int[] fameReq = {
@@ -26,7 +35,18 @@ public class Player : MonoBehaviour {
                                 80,
                                 120
                             };
-
+    private string[] fameTitles = {
+                                      "Delusional Artist (1)",
+                                      "Fan Artist (2)",
+                                      "Unknown Rookie (3)",
+                                      "Somewhat known Rookie (4)",
+                                      "Misunderstood Artist (5)",
+                                      "Underground Artist (6)",
+                                      "Accepted Artist (7)",
+                                      "Wizard on the Rise (8)",
+                                      "Bob Ross (9)",
+                                      "Passpartout (10)",
+                                  };
 
     void OnStartGame()
     {

@@ -26,8 +26,9 @@ public class PaintingSettingsPanel : MonoBehaviour {
         if (currentPainting != null) Unlink();
         gameObject.SetActive(true);
         currentPainting = painting;
-        
+
         priceField.text = currentPainting.price.ToString();
+        descriptiveText.text = "Name: " + currentPainting.title;
         Vector3 pos = Camera.main.WorldToScreenPoint(currentPainting.transform.position);
         GetComponent<RectTransform>().position = pos;
     }

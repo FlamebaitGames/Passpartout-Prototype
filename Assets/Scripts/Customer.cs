@@ -186,10 +186,10 @@ public class Customer : MonoBehaviour {
         {
             dialog.vBubble[0].vMessage = RandomLine(buyResponses);
             dialog.ShowBubble();
-
+            GetComponentInChildren<Animator>().SetTrigger("Happy");
             SendMessageUpwards("PurchasePainting", painting);
 			PlayWow();
-            yield return new WaitForSeconds(4.2f);
+            yield return new WaitForSeconds(5.2f);
 
         }
         Destroy(dialog.GetComponentInChildren<Appear>().gameObject);

@@ -70,7 +70,7 @@ public class PlayState : State {
 
     private void UpdateMoneyFameText(string money, string fame)
     {
-        menuPanels.context.goldFameText.text = money + " Euro\n" + "Fame: " + fame;
+        menuPanels.context.goldFameText.text = money + " Euro\n" + player.fameTitle;
     }
     public override string ToString()
     {
