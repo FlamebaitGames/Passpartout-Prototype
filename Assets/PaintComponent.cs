@@ -14,7 +14,8 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	public int randomSound;
 
     public int brushSize = 16;
-
+    private Vector2 last = Vector2.zero;
+    private bool hasLast = false;
     public Color currentColor = Color.black;
     private Vector2 lastDragPosition = Vector2.zero;
     private float elapsedTime = 0.0f;
@@ -233,22 +234,24 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             pos.y /= rect.rect.height / canvas.height;
             pos.x /= rect.rect.width / canvas.width;
 
-            if (lastDragPosition == Vector2.zero)
+            Vector2 current = new Vector2(pos.x, pos.y);
+            if (hasLast)
             {
-                DrawCircle(canvas, (int)pos.x, (int)pos.y, brushSize, Color.black);
+                
+
+                Vector2 diff = current - last;
+                for (int l = 0; l < diff.magnitude; l += brushSize / 2)
+                {
+                    Vector2 interp = current - diff.normalized * l;
+                    DrawCircle(canvas, (int)interp.x, (int)interp.y, brushSize, currentColor);
+                }
             }
             else
             {
-                int dx = (int)pos.x - (int)lastDragPosition.x;
-                int dy = (int)pos.y - (int)lastDragPosition.y;
-
-                for (int i = 1; i <= 8; i++)
-                {
-                    int x = (int)lastDragPosition.x + dx * (1 / i);
-                    int y = (int)lastDragPosition.y + dy * (1 / i);
-                    DrawCircle(canvas, x, y, brushSize, currentColor);
-                }
+                DrawCircle(canvas, (int)pos.x, (int)pos.y, brushSize, currentColor);
+                hasLast = true;
             }
+            last = current;
 
             canvas.Apply();
 
@@ -257,6 +260,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         else
         {
             lastDragPosition = Vector2.zero;
+            hasLast = false;
         }
 	}
 
