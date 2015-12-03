@@ -77,4 +77,14 @@ public class Player : MonoBehaviour {
             SendMessage("OnRefreshUI");
         }
     }
+
+    public void DecrementFamePoints()
+    {
+        famePoints--;
+        if (famePoints < fameReq[fame-1])
+        {
+            fame--;
+            SendMessage("OnRefreshUI");
+        }
+    }
 }
