@@ -17,7 +17,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public Color currentColor = Color.black;
     private Vector2 lastDragPosition = Vector2.zero;
-
+    private float elapsedTime = 0.0f;
     public enum PaletteColors
     {
         YELLOW,
@@ -46,7 +46,6 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	void Start () {
         // Setup the color palette.
 
-
         var original = gameObject.GetComponent<UnityEngine.UI.RawImage>().mainTexture as Texture2D;
 		fadeIn = false;
 		fadeOut = false;
@@ -56,18 +55,8 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 		paintSound4.volume = 0;
 
 
+        ClearAll();
 
-        canvas = new Texture2D((int)GetComponent<RectTransform>().rect.width, (int)GetComponent<RectTransform>().rect.height);
-        gameObject.GetComponent<UnityEngine.UI.RawImage>().texture = canvas;
-
-        for (int y = 0; y < canvas.height; ++y)
-        {
-            for (int x = 0; x < canvas.width; ++x)
-            {
-                canvas.SetPixel(x, y, Color.white);
-            }
-        }
-        canvas.Apply();
     }
 
     public void OnPointerDown(PointerEventData data)
@@ -164,6 +153,8 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
 	// Update is called once per frame
 	void Update () {
+        elapsedTime += Time.deltaTime;
+
         float d = Input.GetAxis("Mouse ScrollWheel");
         if (d < 0.0f)
         {
@@ -339,5 +330,27 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void SetCurrentColor(int c)
     {
         currentColor = GetCurrentColor((PaletteColors)c);
+    }
+
+    public void ClearAll()
+    {
+        canvas = new Texture2D((int)GetComponent<RectTransform>().rect.width, (int)GetComponent<RectTransform>().rect.height);
+        canvas.wrapMode = TextureWrapMode.Clamp;
+        gameObject.GetComponent<UnityEngine.UI.RawImage>().texture = canvas;
+
+        for (int y = 0; y < canvas.height; ++y)
+        {
+            for (int x = 0; x < canvas.width; ++x)
+            {
+                canvas.SetPixel(x, y, Color.white);
+            }
+        }
+        canvas.Apply();
+        elapsedTime = 0.0f;
+    }
+
+    public float GetElapsedTime()
+    {
+        return elapsedTime;
     }
 }
