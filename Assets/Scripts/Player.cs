@@ -3,6 +3,8 @@ using System.Collections;
 [TweakableClass]
 public class Player : MonoBehaviour {
 
+	public AudioSource sellSound;
+
     [TweakableField, SerializeField]
     private int startingMoney;
     [TweakableField, SerializeField]
@@ -53,6 +55,7 @@ public class Player : MonoBehaviour {
 
     public void AddMoney(int cost)
     {
+		sellSound.Play ();
         money += cost;
         MenuPanels p = FindObjectOfType<MenuPanels>();
         p.context.moneyPopper.Play(cost);
