@@ -21,13 +21,39 @@ public class Gallery : MonoBehaviour
         Painting p = AddNewPainting(paintComponent.canvas);
         p.title = inputFieldTitle.text;
         p.price = int.Parse(inputFieldPrice.text);
-        p.truePrice = p.price;
+        
         p.nameFactor = Mathf.Clamp(-2 + (((p.title.GetHashCode() % 200) + 101) / 100), -1, 1) + 1; // temp change as it should go from 0-2 (or something like that)
         p.timeSpent = paintComponent.GetElapsedTime();
         paintComponent.ClearAll();
 
         inputFieldPrice.text = "25";
         inputFieldTitle.text = "TITLE";
+
+
+        // Calculat the TRUE price of the TRUE painting of the TRUE path of TRUE life in TRUE HIGHSCHOOL.
+        // DON'T KNOW IF IT'S GOOD OR BAD.
+        float c = p.price; 
+        float f = p.nameFactor;
+        float t = p.timeSpent;
+        int l   = GameObject.FindObjectOfType<Player>().fame;
+
+        int[] lookup = {   
+                           5,
+                           5,
+                           10,
+                           10,
+                           15,
+                           25,
+                           40,
+                           65,
+                           105,
+                           170
+                       };
+
+        int expected = lookup[l];
+        int tp  = (int)(c * 0.5f + Mathf.Sin(c * c) + expected * 0.25f * t + expected * 0.4f * f);
+        tp = (int) Mathf.Lerp((float)tp, (float)expected, Random.Range(0.6f, 1.0f));
+        p.truePrice = tp;
     }
     #endregion
 
