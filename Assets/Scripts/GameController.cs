@@ -102,7 +102,7 @@ public class GameController : MonoBehaviour
     private void EndDay()
     {
         BroadcastMessage("OnEndDay", SendMessageOptions.DontRequireReceiver);
-        if (day >= 7)
+        if (day >= 5)
         {
             week++;
             day = 1;
