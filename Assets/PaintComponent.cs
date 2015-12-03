@@ -9,6 +9,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 	public AudioSource paintSound2;
 	public AudioSource paintSound3;
 	public AudioSource paintSound4;
+	public AudioSource selectSound;
 	public bool fadeIn;
 	public bool fadeOut;
 	public int randomSound;
@@ -330,6 +331,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void SetCurrentColor(int c)
     {
         currentColor = GetCurrentColor((PaletteColors)c);
+		selectSound.Play ();
     }
 
     public void ClearAll()
