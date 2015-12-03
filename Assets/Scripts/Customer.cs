@@ -50,7 +50,6 @@ public class Customer : MonoBehaviour {
 	public AudioClip[] greetingSound;
 	public AudioClip[] wowSound;
 	public AudioClip[] byeSound;
-	public AudioClip[] ponderSound;
 
 	// Use this for initialization
 	void Start () {
@@ -121,7 +120,7 @@ public class Customer : MonoBehaviour {
                 yield return StartCoroutine(ExaminePainting(p.targetPainting));
                 
             }
-            
+			if(!p.callEvent.Equals("")) SendMessage(p.callEvent, SendMessageOptions.DontRequireReceiver);
         }
 		Debug.Log ("Bye!");
 		PlayBye ();
@@ -133,6 +132,7 @@ public class Customer : MonoBehaviour {
 
     private IEnumerator ExaminePainting(Painting painting)
     {
+
 
         Evaluation ev = IsWorthPurchasing(painting);
         List<Evaluation> indicies = new List<Evaluation>();
@@ -186,8 +186,11 @@ public class Customer : MonoBehaviour {
         {
             dialog.vBubble[0].vMessage = RandomLine(buyResponses);
             dialog.ShowBubble();
+
             SendMessageUpwards("PurchasePainting", painting);
+			PlayWow();
             yield return new WaitForSeconds(4.2f);
+
         }
         Destroy(dialog.GetComponentInChildren<Appear>().gameObject);
 
@@ -236,12 +239,7 @@ public class Customer : MonoBehaviour {
 		if (greetingSound.Length == 0) return;
 		GetComponent<AudioSource>().PlayOneShot(greetingSound[Random.Range(0, greetingSound.Length - 1)]);
 	}
-
-	private void PlayPonder()
-	{
-		if (ponderSound.Length == 0) return;
-		GetComponent<AudioSource>().PlayOneShot(ponderSound[Random.Range(0, ponderSound.Length - 1)]);
-	}
+	
 
 	private void PlayWow()
 	{
