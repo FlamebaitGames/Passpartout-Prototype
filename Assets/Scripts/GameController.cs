@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.Analytics;
 [TweakableClass]
 public class GameController : MonoBehaviour
 {
@@ -49,6 +49,7 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Analytics.SetUserId(SystemInfo.deviceUniqueIdentifier);
         State.Controller = this;
         State.menuPanels = GetComponentInChildren<MenuPanels>();
         Gallery g = FindObjectOfType<Gallery>();
