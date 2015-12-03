@@ -263,6 +263,8 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public void DrawCircle(Texture2D tex, int cx, int cy, int r, Color col)
     {
+
+        Debug.Log(cx + " : " + cy);
         Color32[] pixels = canvas.GetPixels32();
 
         int x, y, px, nx, py, ny, d;
@@ -272,16 +274,21 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             d = (int)Mathf.Ceil(Mathf.Sqrt(r * r - x * x));
             for (y = 0; y <= d; y++)
             {
+                
                 px = cx + x;
                 nx = cx - x;
                 py = cy + y;
                 ny = cy - y;
-
-
-                pixels[py * canvas.width + px] = col;
-                pixels[py * canvas.width + nx] = col;
-                pixels[ny * canvas.width + px] = col;
-                pixels[ny * canvas.width + nx] = col;
+                if (0 <= py && py < tex.height && 0 <= px && px < tex.width && 0 <= ny && ny < tex.height && 0 <= nx && nx < tex.width)
+                {
+                    pixels[py * canvas.width + px] = col;
+                    pixels[py * canvas.width + nx] = col;
+                    pixels[ny * canvas.width + px] = col;
+                    pixels[ny * canvas.width + nx] = col;
+                }
+                
+                
+                
 
                 /*
                 tex.SetPixel(px, py, col);
@@ -319,6 +326,7 @@ public class PaintComponent : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public void ClearAll()
     {
+        Debug.Log("CLAERING");
         canvas = new Texture2D((int)GetComponent<RectTransform>().rect.width, (int)GetComponent<RectTransform>().rect.height);
         canvas.wrapMode = TextureWrapMode.Clamp;
         gameObject.GetComponent<UnityEngine.UI.RawImage>().texture = canvas;

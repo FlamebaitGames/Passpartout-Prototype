@@ -12,12 +12,15 @@ public class Gallery : MonoBehaviour
 
     public void ConfirmPainting()
     {
+        Debug.Log("CONFIRM PAINTING");
         // Make sure the text works 
         if (inputFieldTitle.text.Length <= 0) return;
         if (inputFieldPrice.text.Length <= 0) return;
         if (inputFieldTitle.text == "TITLE") return;
 
         PaintComponent paintComponent = PaintCanvasObject.GetComponent<PaintComponent>();
+
+        Debug.Log("ADDED PAINTING");
         Painting p = AddNewPainting(paintComponent.canvas);
         p.title = inputFieldTitle.text;
         p.price = int.Parse(inputFieldPrice.text);
