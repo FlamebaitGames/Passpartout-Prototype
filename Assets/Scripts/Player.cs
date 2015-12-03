@@ -44,6 +44,8 @@ public class Player : MonoBehaviour {
     {
         //Debug.Assert(CanAfford(cost), "Can't afford to pay for this!");
         money -= cost;
+        MenuPanels p = FindObjectOfType<MenuPanels>();
+        p.context.moneyPopper.Play(-cost);
         SendMessage("OnRefreshUI");
         if (money < 0) SendMessage("OnLose");
         
@@ -52,6 +54,8 @@ public class Player : MonoBehaviour {
     public void AddMoney(int cost)
     {
         money += cost;
+        MenuPanels p = FindObjectOfType<MenuPanels>();
+        p.context.moneyPopper.Play(cost);
         SendMessage("OnRefreshUI");
     }
 
