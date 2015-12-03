@@ -37,11 +37,18 @@ public class Customer : MonoBehaviour {
     private Vector3 lookTarget = Vector3.zero;
 
     private Player player;
+
+	public AudioClip[] greetingSound;
+	public AudioClip[] wowSound;
+	public AudioClip[] byeSound;
+	public AudioClip[] ponderSound;
+
 	// Use this for initialization
 	void Start () {
         player = FindObjectOfType<Player>();
         dialog = GetComponentInChildren<DialogBubble>();
         Debug.Assert(player != null);
+
 	}
 	
 	// Update is called once per frame
@@ -58,6 +65,7 @@ public class Customer : MonoBehaviour {
     public void BeginTraversingPath(PathPoint[] path)
     {
         StartCoroutine(Travel(path));
+		StartCoroutine (WaitForGreeting ());
     }
 
 
@@ -106,34 +114,77 @@ public class Customer : MonoBehaviour {
             }
             
         }
+		Debug.Log ("Bye!");
+		PlayBye ();
         SendMessageUpwards("OnCustomerExit", this);
+
+
+
     }
 
     private IEnumerator ExaminePainting(Painting painting)
     {
+
         Evaluation ev = IsWorthPurchasing(painting);
         switch(ev) {
             case Evaluation.SHIT:
                 dialog.vBubble[0].vMessage = RandomLine(shitResponses);
                 dialog.ShowBubble();
+				PlayPonder ();
                 yield return new WaitForSeconds(4.5f);
                 break;
             case Evaluation.AFFORDABLE:
                 dialog.vBubble[0].vMessage = RandomLine(notMyTasteResponses);
                 dialog.ShowBubble();
+				PlayPonder ();
                 yield return new WaitForSeconds(4.5f);
                 break;
             case Evaluation.MY_TASTE:
                 dialog.vBubble[0].vMessage = RandomLine(noAffordResponses);
                 dialog.ShowBubble();
+				PlayPonder ();
                 yield return new WaitForSeconds(4.5f);
                 break;
             case Evaluation.BOTH:
                 dialog.vBubble[0].vMessage = RandomLine(buyResponses);
                 dialog.ShowBubble();
+				PlayWow();
                 SendMessageUpwards("PurchasePainting", painting);
                 yield return new WaitForSeconds(4.2f);
                 break;
         }
     }
+
+	private IEnumerator WaitForGreeting()
+	{
+		yield return new WaitForSeconds (1);
+		PlayGreeting();
+		Debug.Log ("Helloooo!");
+	}
+
+
+	private void PlayGreeting()
+	{
+		if (greetingSound.Length == 0) return;
+		GetComponent<AudioSource>().PlayOneShot(greetingSound[Random.Range(0, greetingSound.Length - 1)]);
+	}
+
+	private void PlayPonder()
+	{
+		if (ponderSound.Length == 0) return;
+		GetComponent<AudioSource>().PlayOneShot(ponderSound[Random.Range(0, ponderSound.Length - 1)]);
+	}
+
+	private void PlayWow()
+	{
+		if (wowSound.Length == 0) return;
+		GetComponent<AudioSource>().PlayOneShot(wowSound[Random.Range(0, wowSound.Length - 1)]);
+	}
+
+	private void PlayBye()
+	{
+		if (byeSound.Length == 0) return;
+		GetComponent<AudioSource>().PlayOneShot(byeSound[Random.Range(0, byeSound.Length - 1)]);
+	}
+
 }
