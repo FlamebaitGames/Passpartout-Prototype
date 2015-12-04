@@ -10,9 +10,14 @@ public class MusicManagerScript : MonoBehaviour
 	void Start () 
 	{
 		musicInit.Play();
-		musicLoop.PlayDelayed(musicInit.clip.length);
+        StartCoroutine(PlayDelayed());
 	}
-	
+
+    IEnumerator PlayDelayed()
+    {
+        yield return new WaitForSeconds(musicInit.clip.length);
+        musicLoop.Play();
+    }
 
 	
 	// Update is called once per frame

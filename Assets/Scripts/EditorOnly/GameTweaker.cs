@@ -1,9 +1,11 @@
-﻿#if UNITY_EDITOR
+﻿
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System;
 using System.Reflection;
 
@@ -30,7 +32,7 @@ sealed class TweakableClass : Attribute
     {
     }
 }
-
+#if UNITY_EDITOR
 public class GameTweaker : EditorWindow {
     [SerializeField]
     private bool open = false;
