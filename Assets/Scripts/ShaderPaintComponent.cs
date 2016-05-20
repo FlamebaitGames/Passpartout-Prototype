@@ -8,7 +8,7 @@ public class ShaderPaintComponent : MonoBehaviour {
     private RectTransform rect;
     private Vector2 lastMousePos = -Vector2.one;
     private Vector2 secondLastMousePos = -Vector2.one;
-    private MouseTracker tracker;
+    //private MouseTracker tracker;
 
 	// Use this for initialization
 	void Start () {
@@ -25,17 +25,33 @@ public class ShaderPaintComponent : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-        if (Input.GetMouseButtonDown(0) && !Mathf.Approximately(Input.mousePosition.magnitude, lastMousePos.magnitude))
+        if (Input.GetMouseButton(0)) // && !Mathf.Approximately(Input.mousePosition.magnitude, lastMousePos.magnitude))
         {
-            RenderBezier();
+            Vector2 pos;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, Input.mousePosition, null, out pos)) return;
+
+            pos.y = rect.rect.height - Mathf.Abs(pos.y);
+            pos.y /= rect.rect.height;
+            pos.x /= rect.rect.width;
+
+            Vector2 diff = pos - lastMousePos;
+            Debug.Log(diff.magnitude);
+            if (diff.magnitude > 0.015)
+            {
+                RenderBezier(pos);
+            } else
+            {
+                //RenderStraight(pos);
+            }
+
 
 
         }
-        /*else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
             lastMousePos = -Vector2.one;
             secondLastMousePos = -Vector2.one;
-        }*/
+        }
 
         if (Input.mouseScrollDelta.magnitude > 0.0f)
         {
@@ -95,14 +111,32 @@ public class ShaderPaintComponent : MonoBehaviour {
         }
     }
 
-    void RenderBezier()
+    void RenderStraight(Vector2 pos)
     {
-        Vector2 pos;
-        if(!RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, Input.mousePosition, null, out pos)) return;
+        if (pos.x < 0 || pos.x > 1 || pos.y < 0 || pos.y > 1) return;
+        if (secondLastMousePos != -Vector2.one)
+        {
+            Vector3 paintDir = Vector3.Project(new Vector3(secondLastMousePos.x, secondLastMousePos.y, 0), new Vector3(lastMousePos.y - pos.y, -(lastMousePos.x - pos.x)).normalized);
+            if (Mathf.Approximately(paintDir.magnitude, 0))
+                paintDir = Vector3.zero;
+            else paintDir.Normalize();
+            Debug.Log(": " + paintDir);
+            painterShader.SetVector("_PaintDirection", paintDir);
 
-        pos.y = rect.rect.height - Mathf.Abs(pos.y);
-        pos.y /= rect.rect.height;
-        pos.x /= rect.rect.width;
+            painterShader.SetVector("_PointA", secondLastMousePos);
+            painterShader.SetVector("_PointB", lastMousePos);
+            painterShader.SetVector("_PointC", pos);
+
+            Graphics.Blit(renderTex2, renderTex, painterShader, 0);
+            Graphics.Blit(renderTex, renderTex2);
+        }
+        secondLastMousePos = lastMousePos;
+        lastMousePos = pos;
+    }
+
+    void RenderBezier(Vector2 pos)
+    {
+        
         if (pos.x < 0 || pos.x > 1 || pos.y < 0 || pos.y > 1) return;
         if (secondLastMousePos != -Vector2.one)
         {

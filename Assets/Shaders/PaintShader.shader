@@ -30,6 +30,9 @@
 			float4 _PaintDirection;
 			float4 _BrushColor;
 			float _BrushSize;
+			float4 _PointA;
+			float4 _PointB;
+			float4 _PointC;
 			struct v2f
 			{
 				float2 uv : TEXCOORD0;
@@ -60,14 +63,14 @@
 				float4 brushCol = _BrushColor;
 				
 				// Fill end circles
-				float inBox = smoothstep(0.99, 0.995, (1 - length((i.uv.xy- _MousePosition).xy)));
-				inBox = max(inBox, smoothstep(0.99, 0.995, (1 - length((i.uv.xy- _LastMousePosition).xy))));
+				float inBox = smoothstep(0.99, 0.995, (1 - length((i.uv.xy- _PointB).xy)));
+				inBox = max(inBox, smoothstep(0.99, 0.995, (1 - length((i.uv.xy- _PointC).xy))));
 
-				float2 rectF = _MousePosition-_LastMousePosition;
+				float2 rectF = _PointB -_PointC;
 				float rLen = length(rectF);
 				float2 rectU = float2(rectF.y, -rectF.x);
 
-				float2 center = _LastMousePosition + rectF * 0.5;
+				float2 center = _PointC + rectF * 0.5;
 
 
 				
@@ -85,8 +88,8 @@
 
 				float2 offset = (_PaintDirection*uvDist);// * step(0.1, length(float2(0, 0)));//lerp(k1 * uvDist, k2 * uvDist, uvDist);
 				//offset = normalize(offset) * clamp(length(offset), 0, 1);
-				float2 posF = project(uvPos + offset, normalize(rectF)); // 
-				float2 posU = project(uvPos + offset, normalize(rectU));
+				float2 posF = project(uvPos, normalize(rectF)); // 
+				float2 posU = project(uvPos, normalize(rectU));
 
 				// Fill Box in between
 				inBox = max( inBox, step(0.01, rLen) * step(1 - length(rectF), 1 - length(posF) * 2) * smoothstep(0.99, 0.995, 1 - length(posU)) );
@@ -96,9 +99,7 @@
 				return c;// length(i.uv.xy-_MousePosition.xy);
 			}
 
-			float4 _PointA;
-			float4 _PointB;
-			float4 _PointC;
+			
 
 			fixed4 fragBezier (v2f i) : SV_Target
 			{
@@ -247,6 +248,46 @@
 				return r;
 			}
 
+			/*
+			public double getClosestPointToCubicBezier(double fx, double fy, int slices, double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3)  {
+				double tick = 1d / (double) slices;
+				double x;
+				double y;
+				double t;
+				double best = 0;
+				double bestDistance = Double.POSITIVE_INFINITY;
+				double currentDistance;
+				for (int i = 0; i <= slices; i++) {
+					t = i * tick;
+					//B(t) = (1-t)**3 p0 + 3(1 - t)**2 t P1 + 3(1-t)t**2 P2 + t**3 P3
+					x = (1 - t) * (1 - t) * (1 - t) * x0 + 3 * (1 - t) * (1 - t) * t * x1 + 3 * (1 - t) * t * t * x2 + t * t * t * x3;
+					y = (1 - t) * (1 - t) * (1 - t) * y0 + 3 * (1 - t) * (1 - t) * t * y1 + 3 * (1 - t) * t * t * y2 + t * t * t * y3;
+
+					currentDistance = Point.distanceSq(x,y,fx,fy);
+					if (currentDistance < bestDistance) {
+						bestDistance = currentDistance;
+						best = t;
+					}
+				}
+				return best;
+			}	
+			*/
+
+			float2 projectOnBezier(float2 a, float2 b, float2 c, float2 d, float2 e, float2 p, uint slices)
+			{
+				float tickDelta = 1.0 / (float)slices;
+				float2 best = float2(100, 100);
+				float bestLen = 100;
+				for (uint i = 0; i <= slices; i++) {
+					lerpResult res = bezierLerp(a, b, c, d, e, tickDelta*(float)i);
+					//if(length(res.lerpRes) < length(best))
+					float select = step(length(p - res.lerpRes), bestLen);
+					best = lerp(best, res.lerpRes, select);
+					bestLen = length(p - best);
+				}
+				return best;
+			}
+
 			fixed4 fragBezierEndPoint (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
@@ -260,7 +301,7 @@
 
 				float2 rectF = end - start;
 				float2 rectU = float2(rectF.y, -rectF.x);
-				fixed2 bezierPoint = rectF + normalize(_PointB - _PointC) * length(_PointB - _PointC);
+				fixed2 bezierPoint = rectF + normalize(_PointB - _PointC) * length(rectF)*0.2;
 				float2 center = start + rectF * 0.5;
 
 
@@ -280,13 +321,20 @@
 					bezierPoint, //d
 					rectF, //e
 					uvDist); //delta
-
+				float2 projUvPos = projectOnBezier(
+					float2(0, 0), // a
+					rectF*0.5, // b
+					bezierPoint - rectF*0.5, //c
+					bezierPoint, //d
+					rectF, // e
+					uvPos,
+					(uint)max((10000 * length(rectF)) * length(_PointB-_PointC), 8));
 				float2 offset = lerpRes.lerpRes;
 				float2 lerpDir = lerpRes.lerpDir;
 
 				float2 uv_pos = uvPos - lerpRes.lastLerpA;
 				float2 uv_lerpPos = project(uv_pos, lerpDir);
-				float2 uv_lerpDist = uv_pos - uv_lerpPos;
+				float2 uv_lerpDist = uvPos - projUvPos;//uv_pos - uv_lerpPos;
 
 				/*// lerp 1
 				float2 lerp0 = lerp(float2(0,0), rectF*0.5, uvDist);
@@ -314,17 +362,20 @@
 
 
 
-				float2 posF = project(uvPos + offset, normalize(rectF)); // 
-				float2 posU = project(uvPos + offset, normalize(rectU));
+				float2 posF = project(uvPos, normalize(rectF)); // 
+				float2 posU = project(uvPos, normalize(rectU));
 
 				// Fill end circles
 				float inBox = 0;
-				inBox = smoothstep(brushSize, brushSize + 0.005, (1 - length(uv_lerpDist))) ;
-				//inBox = smoothstep(brushSize, brushSize + 0.005, (1 - length((i.uv.xy- start).xy)));
-				//inBox = max(inBox, smoothstep(brushSize, brushSize + 0.005, (1 - length((i.uv.xy- end).xy))));
+				inBox = lerp(
+					max(inBox, (1 - step(length(rectF), length(posF - rectF))) * step(length(posF), length(rectF)) * smoothstep(brushSize, brushSize + 0.005, 1 - length(posU))),
+					smoothstep(brushSize, brushSize + 0.005, (1 - length(uv_lerpDist))),
+					step(0.02, length(rectF)));
+				inBox = max(inBox, smoothstep(brushSize, brushSize + 0.005, (1 - length((i.uv.xy- start).xy))));
+				inBox = max(inBox, smoothstep(brushSize, brushSize + 0.005, (1 - length((i.uv.xy- end).xy))));
 				// Fill Box in between
 				//inBox = max( inBox,  (1-step(length(rectF), length(posF - rectF))) * step(length(posF), length(rectF)) * smoothstep(brushSize, brushSize + 0.005, 1 - length(posU)) );
-				
+				//col float4(projUvPos.x, projUvPos.y, 0, 1)
 				float4 c = lerp(col, brushCol, inBox);
 
 				return c;// length(i.uv.xy-_MousePosition.xy);
